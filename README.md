@@ -1,0 +1,16 @@
+# goalstack
+
+Goal Stack is a lightweight task and goal tracking app built with Flutter. It helps users organize tasks by categories, set daily targets, and monitor progress with a clean, intuitive interface. Designed to support focus, consistency, and measurable productivity growth.
+
+## Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
