@@ -307,7 +307,7 @@ class _AddGoalPageState extends State<AddGoalPage> {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 // Якщо вибрано - фон стає кольором цілі!
-                color: isSelected ? _selectedColor : const Color(0xFF1A2A4A).withOpacity(0.5),
+                color: isSelected ? _selectedColor : const Color(0xFF1A2A4A).withOpacity(0.2),
                 shape: BoxShape.circle,
                 border: Border.all(color: isSelected ? Colors.transparent : Colors.white24),
               ),

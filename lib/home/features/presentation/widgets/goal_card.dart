@@ -5,8 +5,10 @@ class GoalCard extends StatefulWidget {
   final IconData icon;
   final Color iconColor;
   final int streak;
+
   // Початковий стан вогників (true - виконано, false - ні)
   final List<bool> initialWeekDays;
+
   // Функція, яка спрацює, коли користувач підтвердить видалення
   final VoidCallback onDelete;
 
@@ -26,7 +28,15 @@ class GoalCard extends StatefulWidget {
 
 class _GoalCardState extends State<GoalCard> {
   late List<bool> _weekDaysStatus;
-  final List<String> _dayNames = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+  final List<String> _dayNames = [
+    'MON',
+    'TUE',
+    'WED',
+    'THU',
+    'FRI',
+    'SAT',
+    'SUN',
+  ];
 
   @override
   void initState() {
@@ -39,8 +49,10 @@ class _GoalCardState extends State<GoalCard> {
   Widget build(BuildContext context) {
     // ❗️ Dismissible - це віджет, який додає свайп
     return Dismissible(
-      key: UniqueKey(), // Унікальний ключ для картки
-      direction: DismissDirection.endToStart, // Свайп ТІЛЬКИ справа наліво (вліво)
+      key: UniqueKey(),
+      // Унікальний ключ для картки
+      direction: DismissDirection.endToStart,
+      // Свайп ТІЛЬКИ справа наліво (вліво)
 
       // Фон, який видно під час свайпу (Червоний з корзиною)
       background: Container(
@@ -61,17 +73,33 @@ class _GoalCardState extends State<GoalCard> {
           builder: (BuildContext context) {
             return AlertDialog(
               backgroundColor: const Color(0xFF1A2A4A),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              title: const Text('Delete Goal?', style: TextStyle(color: Colors.white)),
-              content: const Text('Are you sure you want to delete this goal? This action cannot be undone.', style: TextStyle(color: Colors.white70)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: const Text(
+                'Delete Goal?',
+                style: TextStyle(color: Colors.white),
+              ),
+              content: const Text(
+                'Are you sure you want to delete this goal? This action cannot be undone.',
+                style: TextStyle(color: Colors.white70),
+              ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(false), // Скасувати
-                  child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+                  onPressed: () => Navigator.of(context).pop(false),
+                  // Скасувати
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.grey),
+                  ),
                 ),
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(true), // Підтвердити
-                  child: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+                  onPressed: () => Navigator.of(context).pop(true),
+                  // Підтвердити
+                  child: const Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.redAccent),
+                  ),
                 ),
               ],
             );
@@ -89,9 +117,16 @@ class _GoalCardState extends State<GoalCard> {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: const Color(0xFF0F172A).withOpacity(0.9), // Темно-синій фон картки
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              const Color(0xFF122246).withOpacity(0.45),
+              const Color(0xFF091428).withOpacity(0.45),
+            ],
+          ),
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.white.withOpacity(0.05)),
+          border: Border.all(color: Colors.white.withOpacity(0.18)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +143,12 @@ class _GoalCardState extends State<GoalCard> {
                 Expanded(
                   child: Text(
                     widget.title,
-                    style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600, height: 1.2),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      height: 1.2,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -116,7 +156,10 @@ class _GoalCardState extends State<GoalCard> {
                 // Streak
                 Text(
                   '${widget.streak} days streak!',
-                  style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 14),
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.6),
+                    fontSize: 14,
+                  ),
                 ),
               ],
             ),
@@ -126,7 +169,9 @@ class _GoalCardState extends State<GoalCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: List.generate(7, (index) {
-                final bool isCompleted = index < _weekDaysStatus.length ? _weekDaysStatus[index] : false;
+                final bool isCompleted = index < _weekDaysStatus.length
+                    ? _weekDaysStatus[index]
+                    : false;
 
                 return Column(
                   children: [
@@ -139,18 +184,22 @@ class _GoalCardState extends State<GoalCard> {
                         });
                       },
                       child: Container(
-                        width: 40,
-                        height: 40,
+                        width: 43,
+                        height: 43,
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
                         ),
                         child: Center(
-                          child: Icon(
-                            Icons.local_fire_department,
-                            // ❗️ РОЖЕВИЙ КОЛІР при виконанні, сірий - якщо ні
-                            color: isCompleted ? Colors.pinkAccent : Colors.grey.shade400,
-                            size: 26,
+                          // ❗️ ЗАМІНИЛИ Icon НА Image.asset
+                          child: Image.asset(
+                            isCompleted
+                                ? 'assets/icons/flame_icon.png' // 👈 Встав сюди свій шлях до кольорового вогника
+                                : 'assets/icons/flame_gray_icon.png',
+                            // 👈 Встав сюди свій шлях до чорно-білого вогника
+                            width: 30, // Розмір іконки
+                            height: 30,
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),

@@ -14,31 +14,7 @@ class _CallendarPageState extends State<CallendarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/main_background2.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-          // const SafeArea(
-          //   bottom: false,
-          //   child: Column(children: [
-          //     HomeAppBar()
-          //   ]),
-          // ),
-          const Align(
-            alignment: Alignment.center,
-            child: Center(
-              child: Text(
-                "Тут буде календар",
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
+

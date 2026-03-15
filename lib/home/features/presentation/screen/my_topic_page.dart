@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:goalstack/home/features/presentation/widgets/empty_topic_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:goalstack/home/features/presentation/widgets/goal_card.dart';
 import 'package:goalstack/settings/main_layout.dart';
+import '../widgets/empty_topic_screen.dart';
+import '../widgets/goal_card.dart';
 
-class MyTopicPage extends StatefulWidget {
+
+// ❗️ 1. Змінили на ConsumerStatefulWidget
+class MyTopicPage extends ConsumerStatefulWidget {
   const MyTopicPage({super.key});
 
   @override
-  State<MyTopicPage> createState() => _MyTopicPageState();
+  ConsumerState<MyTopicPage> createState() => _MyTopicPageState();
 }
 
-class _MyTopicPageState extends State<MyTopicPage> {
-  // Тимчасовий список для тестування дизайну
+// ❗️ 2. Змінили на ConsumerState
+class _MyTopicPageState extends ConsumerState<MyTopicPage> {
+  // Наші тестові цілі
   List<Map<String, dynamic>> dummyGoals = [
     {
       'title': 'Wake up at 7am everyday',
       'icon': Icons.alarm,
-      'color': const Color(0xFF0084F4), // Синій
+      'color': const Color(0xFF0084F4),
       'streak': 4,
       'days': [true, false, true, true, true, true, false],
     },
     {
       'title': 'Read 20 pages of a book',
       'icon': Icons.menu_book,
-      'color': const Color(0xFFFF6B00), // Помаранчевий
+      'color': const Color(0xFFFF6B00),
       'streak': 12,
       'days': [false, false, false, false, false, false, false],
     },
@@ -32,16 +35,31 @@ class _MyTopicPageState extends State<MyTopicPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Якщо список пустий - показуємо екран створення
+    // ❗️ 3. МАГІЯ ТУТ: Ми автоматично перемикаємо Riverpod!
+    // Якщо список НЕ пустий -> true (меню показується)
+    // Якщо пустий -> false (меню ховається)
+    Future.microtask(() {
+      ref.read(hasGoalsProvider.notifier).state = dummyGoals.isNotEmpty;
+    });
+
+    // Якщо цілей немає - малюємо пустий екран з помаранчевою кнопкою
     if (dummyGoals.isEmpty) {
       return const EmptyTopicScreen();
     }
 
+    // Якщо цілі є - малюємо список
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SafeArea(
+        bottom: false, // ❗️ Вимикаємо нижню безпечну зону для нашого відступу
         child: ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+          // ❗️ Ті самі відступи, щоб картки скролилися МІЖ менюшками
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            top: 80.0,
+            bottom: 120.0,
+          ),
           itemCount: dummyGoals.length,
           itemBuilder: (context, index) {
             final goal = dummyGoals[index];
@@ -53,20 +71,16 @@ class _MyTopicPageState extends State<MyTopicPage> {
               streak: goal['streak'],
               initialWeekDays: List<bool>.from(goal['days']),
               onDelete: () {
-                // Логіка видалення після підтвердження свайпу
                 setState(() {
                   dummyGoals.removeAt(index);
                 });
 
-                // Показуємо плашку, що ціль видалено
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: const Text('Goal deleted successfully'),
                     backgroundColor: Colors.redAccent,
                     behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
                 );
               },
