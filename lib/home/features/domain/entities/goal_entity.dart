@@ -1,21 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
 
+part 'goal_entity.g.dart';
+
+@collection
 class GoalEntity {
-  final String id;
-  final String title;
-  final int streak;
-  final bool isCompleted;
-  final DateTime createdAt;
-  final IconData? icon;
-  final Color? color;
+  Id id = Isar.autoIncrement;
 
-  const GoalEntity({
-    required this.id,
+  late String title;
+  String? description;
+  DateTime? scheduledTime;
+  late int streak;
+  late bool isCompleted;
+  late DateTime createdAt;
+  late String status;
+
+  List<DateTime> completedDates = [];
+
+  int? iconCodePoint;
+  int? colorValue;
+
+  @ignore
+  IconData? get icon => iconCodePoint != null
+      ? IconData(iconCodePoint!, fontFamily: 'MaterialIcons')
+      : null;
+
+  @ignore
+  set icon(IconData? value) => iconCodePoint = value?.codePoint;
+
+  @ignore
+  Color? get color => colorValue != null ? Color(colorValue!) : null;
+
+  @ignore
+  set color(Color? value) => colorValue = value?.value;
+
+  GoalEntity({
     required this.title,
+    this.description,
+    this.scheduledTime,
     this.streak = 0,
     this.isCompleted = false,
     required this.createdAt,
-    this.icon,
-    this.color,
+    required this.status,
+    this.iconCodePoint,
+    this.colorValue,
+    this.completedDates = const [],
   });
 }

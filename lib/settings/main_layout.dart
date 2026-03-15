@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:goalstack/home/features/presentation/widgets/custom_botom_bar.dart';
+import 'package:goalstack/home/features/presentation/widgets/home_app_bar.dart';
 
-class MainLayout extends StatelessWidget {
+final hasGoalsProvider = StateProvider<bool>((ref) => false);
+
+class MainLayout extends ConsumerWidget {
   final Widget child;
 
   const MainLayout({super.key, required this.child});
@@ -15,10 +19,11 @@ class MainLayout extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+
+  Widget build(BuildContext context, WidgetRef ref) {
+    final hasGoals = ref.watch(hasGoalsProvider);
     return Scaffold(
       extendBody: true,
-
       body: Stack(
         children: [
           Positioned.fill(
@@ -27,13 +32,28 @@ class MainLayout extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          SafeArea(bottom: false, child: child),
+          Positioned.fill(
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 0.0),
+                child: child,
+              ),
+            ),
+          ),
+
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: SafeArea(child: const HomeAppBar()),
+          ),
         ],
       ),
-
-      bottomNavigationBar: CustomBottomBar(
+      bottomNavigationBar: hasGoals ?CustomBottomBar(
         currentIndex: _calculateSelectedIndex(context),
-      ),
+      )
+      :null,
     );
   }
 }

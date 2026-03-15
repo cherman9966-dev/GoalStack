@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
-class EmptyTopicsWidget extends StatelessWidget {
-  const EmptyTopicsWidget({super.key});
+class EmptyTopicScreen extends StatelessWidget {
+  const EmptyTopicScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Expanded розтягне цей блок, щоб він був рівно по центру екрану
-    return Expanded(
+    // Прибрали Expanded, додали Padding, щоб кнопка не прилипала до країв
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Іконка вогника
-            SvgPicture.asset(
-              'assets/icons/ic_flame_outline.svg', // ЗАМІНИ НА СВОЮ НАЗВУ ФАЙЛУ
-              height: 120,
-              colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.5),
-                BlendMode.srcIn,
-              ),
+            // ❗️ Використовуємо Image.asset для PNG
+            Image.asset(
+              'assets/icons/vector_flame.png', // Перевір, чи правильна назва!
+              height: 140,
+              // Ось так робиться напівпрозорий білий колір поверх PNG у Flutter:
+              color: Colors.white.withOpacity(0.5),
+              colorBlendMode: BlendMode.srcIn,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 28),
 
             // Текст
             const Text(
@@ -38,18 +38,18 @@ class EmptyTopicsWidget extends StatelessWidget {
             // Кнопка "Створити"
             SizedBox(
               width: double.infinity,
-              height: 56,
+              height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFF6B00), // Помаранчевий
+                  backgroundColor: const Color(0xFFFF6B00), // Твій помаранчевий
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(28),
                   ),
                   elevation: 0,
                 ),
                 onPressed: () {
-                  // TODO: Відкрити форму створення нової цілі
-                  print("Create topic tapped");
+                  // ❗️ МІГРАЦІЯ: Відкриваємо екран створення цілі
+                  context.push('/add_goal');
                 },
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,

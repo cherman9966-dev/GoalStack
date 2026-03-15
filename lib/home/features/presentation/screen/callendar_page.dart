@@ -22,12 +22,12 @@ class _CallendarPageState extends State<CallendarPage> {
               fit: BoxFit.cover,
             ),
           ),
-          const SafeArea(
-            bottom: false,
-            child: Column(children: [
-              HomeAppBar()
-            ]),
-          ),
+          // const SafeArea(
+          //   bottom: false,
+          //   child: Column(children: [
+          //     HomeAppBar()
+          //   ]),
+          // ),
           const Align(
             alignment: Alignment.center,
             child: Center(
