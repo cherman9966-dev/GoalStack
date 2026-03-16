@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:goalstack/home/features/presentation/screen/add_goal_page.dart';
-import 'package:goalstack/home/features/presentation/screen/login_page.dart';
-import 'package:goalstack/home/features/presentation/screen/my_topic_page.dart';
-import 'package:goalstack/home/features/presentation/screen/callendar_page.dart';
-import 'package:goalstack/home/features/presentation/screen/setting_page.dart';
+import 'package:goalstack/home/features/presentation/pages/add_goal_page.dart';
+import 'package:goalstack/home/features/presentation/pages/callendar_page.dart';
+import 'package:goalstack/home/features/presentation/pages/login_page.dart';
+import 'package:goalstack/home/features/presentation/pages/my_topic_page.dart';
+import 'package:goalstack/home/features/presentation/pages/setting_page.dart';
 import 'package:goalstack/settings/main_layout.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

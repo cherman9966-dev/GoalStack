@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:goalstack/settings/main_layout.dart';
-import '../widgets/empty_topic_screen.dart';
-import '../widgets/goal_card.dart';
+import 'empty_topic_screen.dart';
+import '../widgets/card/goal_card.dart';
 
 
 // ❗️ 1. Змінили на ConsumerStatefulWidget

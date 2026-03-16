@@ -12,7 +12,7 @@ class HomeAppBar extends StatelessWidget {
   }
 
   String _getFormattedDate() {
-    return DateFormat('EEE d MMM').format(DateTime.now());
+    return DateFormat('EEEE d MMMM').format(DateTime.now());
   }
 
   @override

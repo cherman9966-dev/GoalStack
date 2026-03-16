@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:goalstack/home/features/presentation/widgets/custom_botom_bar.dart';
-import 'package:goalstack/home/features/presentation/widgets/home_app_bar.dart';
+import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/custom_botom_bar.dart';
+import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/home_app_bar.dart';
 
 class CallendarPage extends StatefulWidget {
   const CallendarPage({super.key});

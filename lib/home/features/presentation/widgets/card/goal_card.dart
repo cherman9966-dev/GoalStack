@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:goalstack/home/features/presentation/widgets/animations/confetti_overlay.dart';
+import 'package:goalstack/home/features/presentation/widgets/card/logic/dynamic_motivator.dart';
+import 'package:goalstack/home/features/presentation/widgets/card/logic/streak_calculator.dart';
 
 class GoalCard extends StatefulWidget {
   final String title;
@@ -47,6 +50,9 @@ class _GoalCardState extends State<GoalCard> {
 
   @override
   Widget build(BuildContext context) {
+    final int activeFires = _weekDaysStatus.where((isCompleted) => isCompleted).length;
+    final bool isPerfectWeek = activeFires == 7;
+    final int liveStreak = StreakCalculator.calculate(_weekDaysStatus);
     // ❗️ Dismissible - це віджет, який додає свайп
     return Dismissible(
       key: UniqueKey(),
@@ -152,14 +158,18 @@ class _GoalCardState extends State<GoalCard> {
                   ),
                 ),
                 const SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    // Текст Streak
+                    Text(
+                      '$liveStreak days streak!',
+                      style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 14),
+                    ),
+                    const SizedBox(height: 2),
 
-                // Streak
-                Text(
-                  '${widget.streak} days streak!',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
-                    fontSize: 14,
-                  ),
+                    DynamicMotivator(activeFires: activeFires),
+                  ],
                 ),
               ],
             ),
@@ -172,38 +182,49 @@ class _GoalCardState extends State<GoalCard> {
                 final bool isCompleted = index < _weekDaysStatus.length
                     ? _weekDaysStatus[index]
                     : false;
-
                 return Column(
                   children: [
-                    // Кліп на кружечок
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          // Змінюємо стан при натисканні (було сіре -> стало рожеве)
-                          _weekDaysStatus[index] = !_weekDaysStatus[index];
-                        });
-                      },
-                      child: Container(
-                        width: 43,
-                        height: 43,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          // ❗️ ЗАМІНИЛИ Icon НА Image.asset
-                          child: Image.asset(
-                            isCompleted
-                                ? 'assets/icons/flame_icon.png' // 👈 Встав сюди свій шлях до кольорового вогника
-                                : 'assets/icons/flame_gray_icon.png',
-                            // 👈 Встав сюди свій шлях до чорно-білого вогника
-                            width: 30, // Розмір іконки
-                            height: 30,
-                            fit: BoxFit.contain,
+                    Stack(
+                      alignment: Alignment.center,
+                      clipBehavior: Clip.none, // Щоб салют міг вилітати за краї
+                      children: [
+                        // Твоя оригінальна кнопка вогника (без змін)
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _weekDaysStatus[index] = !_weekDaysStatus[index];
+                            });
+                          },
+                          child: Container(
+                            width: 43,
+                            height: 43,
+                            decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle
+                            ),
+                            child: Center(
+                              child: Image.asset(
+                                isCompleted
+                                    ? 'assets/icons/flame_icon.png'
+                                    : 'assets/icons/flame_gray_icon.png',
+                                width: 34, // Розмір іконки
+                                height: 34,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        // Анімація, яка лежить рівно поверх кружечка
+                        Positioned(
+                          left: -20, // Відцентровуємо 80 по відношенню до 40
+                          top: -20,
+                          child: ConfettiOverlay(
+                            playAnimation: _weekDaysStatus[index],
+                          ),
+                        ),
+                      ],
                     ),
+
                     const SizedBox(height: 8),
                     // Назва дня
                     Text(

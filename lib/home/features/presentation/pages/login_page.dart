@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../widgets/animated_fire_logo.dart';
+import '../widgets/animations/animated_fire_logo.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
