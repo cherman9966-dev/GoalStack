@@ -1,47 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:goalstack/home/features/presentation/home_page.dart';
-import 'package:goalstack/home/features/presentation/screen/callendar_page.dart';
-import 'package:goalstack/home/features/presentation/screen/setting_page.dart';
-import 'package:goalstack/home/features/presentation/screen/my_topics_page.dart';
+import 'package:goalstack/home/features/presentation/pages/add_goal_page.dart';
+import 'package:goalstack/home/features/presentation/pages/callendar_page.dart';
+import 'package:goalstack/home/features/presentation/pages/login_page.dart';
+import 'package:goalstack/home/features/presentation/pages/my_topic_page.dart';
+import 'package:goalstack/home/features/presentation/pages/setting_page.dart';
+import 'package:goalstack/settings/main_layout.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
-final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
-
-GoRouter appRouter = GoRouter(
-  navigatorKey: _rootNavigatorKey,
-  initialLocation: '/home_page',
-  routes: [
-    StatefulShellRoute.indexedStack(
-      builder: (context, state, navigationShell) {
-        return HomePage(navigationShell: navigationShell);
-      },
-      branches: [
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/home_page',
-              builder: (context, state) => const MyTopicsPage(),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/calendar',
-              builder: (context, state) => const CallendarPage(),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/settings',
-              builder: (context, state) => const SettingPage(),
-            ),
-          ],
-        ),
-      ],
-    ),
-  ],
-);
+final routerProvider = Provider<GoRouter>((ref) {
+  return GoRouter(
+    navigatorKey: _rootNavigatorKey,
+    initialLocation: '/login_page',
+    routes: [
+      GoRoute(
+        path: '/login_page',
+        builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: '/add_goal',
+        builder: (context, state) => const AddGoalPage(),
+      ),
+      ShellRoute(
+        builder: (context, state, child) {
+          return MainLayout(child: child);
+        },
+        routes: [
+          GoRoute(
+            path: '/my_topic_page',
+            builder: (context, state) => const MyTopicPage(),
+          ),
+          GoRoute(
+            path: '/calendar',
+            builder: (context, state) => const CallendarPage(),
+          ),
+          GoRoute(
+            path: '/settings',
+            builder: (context, state) => const SettingPage(),
+          ),
+        ],
+      ),
+    ],
+  );
+});
