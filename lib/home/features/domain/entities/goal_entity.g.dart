@@ -66,6 +66,11 @@ const GoalEntitySchema = CollectionSchema(
       id: 9,
       name: r'title',
       type: IsarType.string,
+    ),
+    r'weekDaysStatus': PropertySchema(
+      id: 10,
+      name: r'weekDaysStatus',
+      type: IsarType.boolList,
     )
   },
   estimateSize: _goalEntityEstimateSize,
@@ -97,6 +102,7 @@ int _goalEntityEstimateSize(
   }
   bytesCount += 3 + object.status.length * 3;
   bytesCount += 3 + object.title.length * 3;
+  bytesCount += 3 + object.weekDaysStatus.length;
   return bytesCount;
 }
 
@@ -116,6 +122,7 @@ void _goalEntitySerialize(
   writer.writeString(offsets[7], object.status);
   writer.writeLong(offsets[8], object.streak);
   writer.writeString(offsets[9], object.title);
+  writer.writeBoolList(offsets[10], object.weekDaysStatus);
 }
 
 GoalEntity _goalEntityDeserialize(
@@ -124,19 +131,19 @@ GoalEntity _goalEntityDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = GoalEntity(
-    colorValue: reader.readLongOrNull(offsets[0]),
-    completedDates: reader.readDateTimeList(offsets[1]) ?? const [],
-    createdAt: reader.readDateTime(offsets[2]),
-    description: reader.readStringOrNull(offsets[3]),
-    iconCodePoint: reader.readLongOrNull(offsets[4]),
-    isCompleted: reader.readBoolOrNull(offsets[5]) ?? false,
-    scheduledTime: reader.readDateTimeOrNull(offsets[6]),
-    status: reader.readString(offsets[7]),
-    streak: reader.readLongOrNull(offsets[8]) ?? 0,
-    title: reader.readString(offsets[9]),
-  );
+  final object = GoalEntity();
+  object.colorValue = reader.readLongOrNull(offsets[0]);
+  object.completedDates = reader.readDateTimeList(offsets[1]) ?? [];
+  object.createdAt = reader.readDateTime(offsets[2]);
+  object.description = reader.readStringOrNull(offsets[3]);
+  object.iconCodePoint = reader.readLongOrNull(offsets[4]);
   object.id = id;
+  object.isCompleted = reader.readBool(offsets[5]);
+  object.scheduledTime = reader.readDateTimeOrNull(offsets[6]);
+  object.status = reader.readString(offsets[7]);
+  object.streak = reader.readLong(offsets[8]);
+  object.title = reader.readString(offsets[9]);
+  object.weekDaysStatus = reader.readBoolList(offsets[10]) ?? [];
   return object;
 }
 
@@ -150,7 +157,7 @@ P _goalEntityDeserializeProp<P>(
     case 0:
       return (reader.readLongOrNull(offset)) as P;
     case 1:
-      return (reader.readDateTimeList(offset) ?? const []) as P;
+      return (reader.readDateTimeList(offset) ?? []) as P;
     case 2:
       return (reader.readDateTime(offset)) as P;
     case 3:
@@ -158,15 +165,17 @@ P _goalEntityDeserializeProp<P>(
     case 4:
       return (reader.readLongOrNull(offset)) as P;
     case 5:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
+      return (reader.readBool(offset)) as P;
     case 6:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 7:
       return (reader.readString(offset)) as P;
     case 8:
-      return (reader.readLongOrNull(offset) ?? 0) as P;
+      return (reader.readLong(offset)) as P;
     case 9:
       return (reader.readString(offset)) as P;
+    case 10:
+      return (reader.readBoolList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -1214,6 +1223,105 @@ extension GoalEntityQueryFilter
       ));
     });
   }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      weekDaysStatusElementEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'weekDaysStatus',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      weekDaysStatusLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'weekDaysStatus',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      weekDaysStatusIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'weekDaysStatus',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      weekDaysStatusIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'weekDaysStatus',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      weekDaysStatusLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'weekDaysStatus',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      weekDaysStatusLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'weekDaysStatus',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      weekDaysStatusLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'weekDaysStatus',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
 }
 
 extension GoalEntityQueryObject
@@ -1520,6 +1628,12 @@ extension GoalEntityQueryWhereDistinct
       return query.addDistinctBy(r'title', caseSensitive: caseSensitive);
     });
   }
+
+  QueryBuilder<GoalEntity, GoalEntity, QDistinct> distinctByWeekDaysStatus() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'weekDaysStatus');
+    });
+  }
 }
 
 extension GoalEntityQueryProperty
@@ -1589,6 +1703,13 @@ extension GoalEntityQueryProperty
   QueryBuilder<GoalEntity, String, QQueryOperations> titleProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'title');
+    });
+  }
+
+  QueryBuilder<GoalEntity, List<bool>, QQueryOperations>
+      weekDaysStatusProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'weekDaysStatus');
     });
   }
 }

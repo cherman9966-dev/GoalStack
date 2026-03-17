@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
+
 part 'goal_entity.g.dart';
 
 @collection
@@ -9,14 +10,12 @@ class GoalEntity {
   late String title;
   String? description;
   DateTime? scheduledTime;
-  int streak = 0;
-  bool isCompleted = false;
+  late int streak;
+  late bool isCompleted;
   late DateTime createdAt;
   late String status;
 
   List<DateTime> completedDates = [];
-
-  List<bool> weekDaysStatus = [false, false, false, false, false, false, false];
 
   int? iconCodePoint;
   int? colorValue;
@@ -35,5 +34,17 @@ class GoalEntity {
   @ignore
   set color(Color? value) => colorValue = value?.value;
 
-  GoalEntity();
+  GoalEntity({
+    required this.title,
+    this.description,
+    this.scheduledTime,
+    this.streak = 0,
+    this.isCompleted = false,
+    required this.createdAt,
+    required this.status,
+    this.iconCodePoint,
+    this.colorValue,
+    this.completedDates = const [],
+  });
+  List<bool> weekDaysStatus = [false, false, false, false, false, false, false];
 }

@@ -1,27 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:goalstack/home/features/domain/entities/goal_entity.dart';
+import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
 
-class AddGoalPage extends StatefulWidget {
+class AddGoalPage extends ConsumerStatefulWidget {
   const AddGoalPage({super.key});
 
   @override
-  State<AddGoalPage> createState() => _AddGoalPageState();
+  ConsumerState<AddGoalPage> createState() => _AddGoalPageState();
 }
 
-class _AddGoalPageState extends State<AddGoalPage> {
+class _AddGoalPageState extends ConsumerState<AddGoalPage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
-  final List<String> _timeOptions = ['Morning', 'Afternoon', 'Evening', 'Anytime'];
+  final List<String> _timeOptions = [
+    'Morning',
+    'Afternoon',
+    'Evening',
+    'Anytime',
+  ];
   final List<IconData> _goalIcons = [
-    Icons.fitness_center, Icons.menu_book, Icons.water_drop, Icons.work_outline, Icons.directions_run,
-    Icons.self_improvement, Icons.attach_money, Icons.language, Icons.music_note,
-    Icons.flight, Icons.local_dining, Icons.smoke_free, Icons.timer_outlined,
-    Icons.directions_car, Icons.list_outlined, Icons.pets, Icons.home, Icons.eco,
-    Icons.favorite_border, Icons.palette, Icons.savings, Icons.laptop_mac, Icons.bedtime,
-
+    Icons.fitness_center,
+    Icons.menu_book,
+    Icons.water_drop,
+    Icons.work_outline,
+    Icons.directions_run,
+    Icons.self_improvement,
+    Icons.attach_money,
+    Icons.language,
+    Icons.music_note,
+    Icons.flight,
+    Icons.local_dining,
+    Icons.smoke_free,
+    Icons.timer_outlined,
+    Icons.directions_car,
+    Icons.list_outlined,
+    Icons.pets,
+    Icons.home,
+    Icons.eco,
+    Icons.favorite_border,
+    Icons.palette,
+    Icons.savings,
+    Icons.laptop_mac,
+    Icons.bedtime,
   ];
   late IconData _selectedIcon;
-
 
   String? _selectedTime;
   final List<Color> _colors = [
@@ -40,7 +64,8 @@ class _AddGoalPageState extends State<AddGoalPage> {
   void initState() {
     super.initState();
     _selectedColor = _colors[0];
-    _selectedIcon = _goalIcons[0];// За замовчуванням вибраний перший колір (помаранчевий)
+    _selectedIcon =
+        _goalIcons[0]; // За замовчуванням вибраний перший колір (помаранчевий)
   }
 
   @override
@@ -68,7 +93,13 @@ class _AddGoalPageState extends State<AddGoalPage> {
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () => context.pop(), // Повернення назад
+          onPressed: () {
+            if (Navigator.of(context).canPop()) {
+              context.pop();
+            } else {
+              context.go('/my_topic_page');
+            }
+          },
         ),
       ),
       body: Container(
@@ -83,9 +114,12 @@ class _AddGoalPageState extends State<AddGoalPage> {
         ),
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 14.0,),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10.0,
+              vertical: 14.0,
+            ),
             child: Container(
-              padding: const EdgeInsets.all(30.0),
+              padding: const EdgeInsets.all(23.0),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -104,134 +138,173 @@ class _AddGoalPageState extends State<AddGoalPage> {
                   ),
                 ],
               ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 1. MAIN TOPIC
-                _buildLabel('Main topic'),
-                _buildTextField(
-                  hint: 'Enter main topic',
-                  controller: _titleController,
-                ),
-                const SizedBox(height: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 1. MAIN TOPIC
+                  _buildLabel('Main topic'),
+                  _buildTextField(
+                    hint: 'Enter main topic',
+                    controller: _titleController,
+                  ),
+                  const SizedBox(height: 16),
 
-                // 2. SELECT TIME
-                // 2. SELECT TIME
-                LayoutBuilder(
-                    builder: (BuildContext context, BoxConstraints constraints) {
-                      return PopupMenuButton<String>(
-                        initialValue: _selectedTime,
-                        position: PopupMenuPosition.under,
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        constraints: BoxConstraints(
-                          minWidth: constraints.maxWidth,
-                          maxWidth: constraints.maxWidth,
-                        ),
+                  // 2. SELECT TIME
+                  // 2. SELECT TIME
+                  LayoutBuilder(
+                    builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                          return PopupMenuButton<String>(
+                            initialValue: _selectedTime,
+                            position: PopupMenuPosition.under,
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: constraints.maxWidth,
+                              maxWidth: constraints.maxWidth,
+                            ),
 
-                        onSelected: (String newValue) {
-                          setState(() {
-                            _selectedTime = newValue;
-                          });
-                        },
-                        itemBuilder: (BuildContext context) {
-                          return _timeOptions.map((String time) {
-                            return PopupMenuItem<String>(
-                              value: time,
+                            onSelected: (String newValue) {
+                              setState(() {
+                                _selectedTime = newValue;
+                              });
+                            },
+                            itemBuilder: (BuildContext context) {
+                              return _timeOptions.map((String time) {
+                                return PopupMenuItem<String>(
+                                  value: time,
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.access_time,
+                                        color: Colors.grey,
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text(
+                                        time,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList();
+                            },
+
+                            // ВІЗУАЛЬНИЙ ДИЗАЙН КНОПКИ (лежить всередині меню)
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.access_time, color: Colors.grey),
+                                  const Icon(
+                                    Icons.access_time,
+                                    color: Colors.grey,
+                                  ),
                                   const SizedBox(width: 12),
-                                  Text(time, style: const TextStyle(color: Colors.black, fontSize: 16)),
+                                  Expanded(
+                                    child: Text(
+                                      _selectedTime ?? 'Select time',
+                                      style: TextStyle(
+                                        color: _selectedTime == null
+                                            ? Colors.black38
+                                            : Colors.black,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: Colors.grey.shade400,
+                                  ),
                                 ],
                               ),
-                            );
-                          }).toList();
+                            ),
+                          );
                         },
+                  ),
+                  const SizedBox(height: 20),
 
-                        // ВІЗУАЛЬНИЙ ДИЗАЙН КНОПКИ (лежить всередині меню)
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.access_time, color: Colors.grey),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  _selectedTime ?? 'Select time',
-                                  style: TextStyle(
-                                    color: _selectedTime == null ? Colors.black38 : Colors.black,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                              Icon(Icons.keyboard_arrow_down, color: Colors.grey.shade400),
-                            ],
-                          ),
+                  // 3. DESCRIPTION
+                  _buildLabel('Description'),
+                  _buildTextField(
+                    hint: 'Enter detailed description of the goal',
+                    controller: _descController,
+                    maxLines: 3,
+                  ),
+                  const SizedBox(height: 15),
+
+                  // 4. GOAL COLOR
+                  _buildLabel('Goal color'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: _colors
+                        .map((color) => _buildColorCircle(color))
+                        .toList(),
+                  ),
+                  const SizedBox(height: 18),
+
+                  // 5. GOAL STATUS
+                  _buildLabel('Goal icon'),
+                  _buildIconSelector(),
+                  const SizedBox(height: 35),
+
+                  // 6. КНОПКА CREATE GOAL
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF6B00),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(28),
                         ),
-                      );
-                    }
-                ),
-                const SizedBox(height: 20),
-
-                // 3. DESCRIPTION
-                _buildLabel('Description'),
-                _buildTextField(
-                  hint: 'Enter detailed description of the goal',
-                  controller: _descController,
-                  maxLines: 5,
-                ),
-                const SizedBox(height: 28),
-
-                // 4. GOAL COLOR
-                _buildLabel('Goal color'),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: _colors
-                      .map((color) => _buildColorCircle(color))
-                      .toList(),
-                ),
-                const SizedBox(height: 24),
-
-                // 5. GOAL STATUS
-                _buildLabel('Goal icon'),
-                _buildIconSelector(),
-                const SizedBox(height: 48),
-
-                // 6. КНОПКА CREATE GOAL
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFF6B00),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(28),
                       ),
-                    ),
-                    onPressed: () {
-                      // TODO: Збереження в Isar
-                      print(
-                        'Створюємо ціль: ${_titleController.text}, Колір: $_selectedColor',
-                      );
-                    },
-                    child: const Text(
-                      'Create Goal',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      onPressed: () async {
+                        if (_titleController.text.trim().isEmpty)
+                        {return;}
+
+                        final newGoal = GoalEntity()
+                          ..title = _titleController.text.trim()
+                          ..createdAt = DateTime.now()
+                          ..status = 'active'
+                          ..streak = 0
+                          ..isCompleted = false
+                          ..color = _selectedColor
+                          ..icon = _selectedIcon;
+                        await ref.read(goalListProvider.notifier).addGoal(newGoal);
+                        context.go('/my_topic_page');
+                        context.pop();
+                        print(
+                          'Goal: ${_titleController.text}, color: $_selectedColor',
+                        );
+                      },
+                      child: const Text(
+                        'Create Goal',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
-      )
     );
   }
 
@@ -307,11 +380,19 @@ class _AddGoalPageState extends State<AddGoalPage> {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 // Якщо вибрано - фон стає кольором цілі!
-                color: isSelected ? _selectedColor : const Color(0xFF1A2A4A).withOpacity(0.2),
+                color: isSelected
+                    ? _selectedColor
+                    : const Color(0xFF1A2A4A).withOpacity(0.2),
                 shape: BoxShape.circle,
-                border: Border.all(color: isSelected ? Colors.transparent : Colors.white24),
+                border: Border.all(
+                  color: isSelected ? Colors.transparent : Colors.white24,
+                ),
               ),
-              child: Icon(icon, color: isSelected ? Colors.white : Colors.white54, size: 26),
+              child: Icon(
+                icon,
+                color: isSelected ? Colors.white : Colors.white54,
+                size: 26,
+              ),
             ),
           );
         }).toList(),

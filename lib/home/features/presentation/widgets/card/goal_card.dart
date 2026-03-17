@@ -3,16 +3,13 @@ import 'package:goalstack/home/features/presentation/widgets/animations/confetti
 import 'package:goalstack/home/features/presentation/widgets/card/logic/dynamic_motivator.dart';
 import 'package:goalstack/home/features/presentation/widgets/card/logic/streak_calculator.dart';
 
+
 class GoalCard extends StatefulWidget {
   final String title;
   final IconData icon;
   final Color iconColor;
   final int streak;
-
-  // Початковий стан вогників (true - виконано, false - ні)
   final List<bool> initialWeekDays;
-
-  // Функція, яка спрацює, коли користувач підтвердить видалення
   final VoidCallback onDelete;
 
   const GoalCard({
@@ -44,7 +41,7 @@ class _GoalCardState extends State<GoalCard> {
   @override
   void initState() {
     super.initState();
-    // Копіюємо початковий стан, щоб мати змогу його змінювати при кліку
+
     _weekDaysStatus = List.from(widget.initialWeekDays);
   }
 
@@ -53,11 +50,12 @@ class _GoalCardState extends State<GoalCard> {
     final int activeFires = _weekDaysStatus.where((isCompleted) => isCompleted).length;
     final bool isPerfectWeek = activeFires == 7;
     final int liveStreak = StreakCalculator.calculate(_weekDaysStatus);
-    // ❗️ Dismissible - це віджет, який додає свайп
     return Dismissible(
       key: UniqueKey(),
-      // Унікальний ключ для картки
       direction: DismissDirection.endToStart,
+      dismissThresholds: const {
+        DismissDirection.endToStart: 0.2,
+      },
       // Свайп ТІЛЬКИ справа наліво (вліво)
 
       // Фон, який видно під час свайпу (Червоний з корзиною)
@@ -142,7 +140,7 @@ class _GoalCardState extends State<GoalCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Іконка заданого кольору
-                Icon(widget.icon, color: widget.iconColor, size: 28),
+                Icon(widget.icon, color: widget.iconColor, size: 38),
                 const SizedBox(width: 16),
 
                 // Назва цілі
@@ -153,11 +151,11 @@ class _GoalCardState extends State<GoalCard> {
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      height: 1.2,
+                      height: 2,
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [

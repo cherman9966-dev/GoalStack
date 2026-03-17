@@ -66,7 +66,7 @@ class CustomBottomBar extends StatelessWidget {
 
             // --- ПРАВИЙ ОСТРІВЕЦЬ (Кнопка створення +) ---
             GestureDetector(
-              onTap: () => context.go('/create'), // Перехід на екран створення
+              onTap: () => context.go('/add_goal'), // Перехід на екран створення
               child: Container(
                 height: 54, // Висота овалу
                 width: 86,  // Ширина овалу (робить його витягнутим)
