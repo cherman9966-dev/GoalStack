@@ -41,8 +41,8 @@ class _MyTopicPageState extends ConsumerState<MyTopicPage> {
             final goal = goals[index];
 
             return GoalCard(
+              id: goal.id,
               title: goal.title,
-
               icon: goal.icon ?? Icons.flag,
               iconColor: goal.color ?? Colors.blue,
 

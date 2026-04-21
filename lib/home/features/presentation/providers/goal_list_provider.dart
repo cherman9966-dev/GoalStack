@@ -33,4 +33,31 @@ class GoalList extends _$GoalList {
 
     await loadGoals();
   }
+
+  Future<void> continueStreak(int goalId) async {
+    final goal = await isar.goalEntitys.get(goalId);
+
+    if (goal != null) {
+      await isar.writeTxn(() async {
+        goal.streak += 1;
+        goal.weekDaysStatus = List.generate(7, (index) => false);
+        await isar.goalEntitys.put(goal);
+      });
+      ref.invalidateSelf();
+    }
+  }
+
+  Future<void> completeGoal(int goalId) async {
+    final goal = await isar.goalEntitys.get(goalId);
+
+    if (goal != null) {
+      await isar.writeTxn(() async {
+        goal.isCompleted = true;
+
+        await isar.goalEntitys.put(goal);
+      });
+
+      ref.invalidateSelf();
+    }
+  }
 }

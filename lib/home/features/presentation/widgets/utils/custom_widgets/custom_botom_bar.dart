@@ -86,7 +86,7 @@ class CustomBottomBar extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const Icon(Icons.add_link_outlined, color: Colors.white, size: 30),
+                child: const Icon(Icons.add_box_outlined, color: Colors.white, size: 30),
               ),
             ),
 

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:goalstack/home/features/presentation/widgets/animations/confetti_overlay.dart';
 import 'package:goalstack/home/features/presentation/widgets/card/logic/dynamic_motivator.dart';
 import 'package:goalstack/home/features/presentation/widgets/card/logic/streak_calculator.dart';
+import 'package:goalstack/home/features/presentation/widgets/dialogs/streak_congrats_dialog.dart';
 
 
 class GoalCard extends StatefulWidget {
+  final int id;
   final String title;
   final IconData icon;
   final Color iconColor;
@@ -14,6 +15,7 @@ class GoalCard extends StatefulWidget {
 
   const GoalCard({
     super.key,
+    required this.id,
     required this.title,
     required this.icon,
     required this.iconColor,
@@ -189,9 +191,26 @@ class _GoalCardState extends State<GoalCard> {
                         // Твоя оригінальна кнопка вогника (без змін)
                         GestureDetector(
                           onTap: () {
+                            // 1. Оновлюємо стан вогника (запалюємо або гасимо)
                             setState(() {
                               _weekDaysStatus[index] = !_weekDaysStatus[index];
                             });
+
+                            // 2. ❗️ ПЕРЕВІРКА ТА ВИКЛИК ДІАЛОГУ ❗️
+                            // Метод every перевіряє, чи всі елементи списку дорівнюють true
+                            final isAllDaysCompleted = _weekDaysStatus.every((status) => status == true);
+
+                            if (isAllDaysCompleted) {
+                              showDialog(
+                                context: context,
+                                barrierColor: Colors.black.withOpacity(0.6), // Затемнення фону
+                                builder: (context) {
+                                  // Викликаємо наш новий діалог
+                                  // Зверни увагу: сюди треба передати реальний goalId цієї картки
+                                  return StreakCongratsDialog(goalId: widget.id);
+                                },
+                              );
+                            }
                           },
                           child: Container(
                             width: 43,
@@ -203,21 +222,13 @@ class _GoalCardState extends State<GoalCard> {
                             child: Center(
                               child: Image.asset(
                                 isCompleted
-                                    ? 'assets/icons/flame_icon.png'
-                                    : 'assets/icons/flame_gray_icon.png',
+                                    ? 'assets/icons/fire_flame.png'
+                                    : 'assets/icons/grey_fire.png',
                                 width: 34, // Розмір іконки
                                 height: 34,
                                 fit: BoxFit.contain,
                               ),
                             ),
-                          ),
-                        ),
-                        // Анімація, яка лежить рівно поверх кружечка
-                        Positioned(
-                          left: -20, // Відцентровуємо 80 по відношенню до 40
-                          top: -20,
-                          child: ConfettiOverlay(
-                            playAnimation: _weekDaysStatus[index],
                           ),
                         ),
                       ],

@@ -149,8 +149,6 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
                   ),
                   const SizedBox(height: 16),
 
-                  // 2. SELECT TIME
-                  // 2. SELECT TIME
                   LayoutBuilder(
                     builder:
                         (BuildContext context, BoxConstraints constraints) {
