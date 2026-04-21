@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../widgets/animations/animated_fire_logo.dart';
+import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/primary_gradient_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,7 +24,6 @@ class _LoginPageState extends State<LoginPage> {
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          // TODO: Встав сюди свій фон
           image: DecorationImage(
             image: AssetImage('assets/images/log_background_fon.png'),
             fit: BoxFit.cover,
@@ -63,9 +63,6 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // 3. Емблема вогню
-                    // TODO: Встав шлях до емблеми
-                    // 3. Емблема вогню (Анімована!)
                     AnimatedFireLogo(
                       mainLogoPath: 'assets/images/fire_logo.png', size: 75,
                       sparkPath: 'assets/icons/flame_icon.png',
@@ -153,70 +150,52 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 20),
 
                     // 8. Кнопка Log in
-                    SizedBox(
-                      width: double.infinity,
-                      height: 45,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFF6B00),
-                          // Помаранчевий
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(28),
-                          ),
-                        ),
-                        onPressed: () {
-                          if (_emailController.text.trim().isEmpty ||
-                              _passwordController.text.trim().isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: const Row(
-                                  children: [
-                                    Icon(
-                                      Icons.info_outline,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
-                                        'Please enter your Email and Password',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                    PrimaryGradientButton(
+                      text: 'Log in',
+                      onPressed: () {
+                        if (_emailController.text.trim().isEmpty ||
+                            _passwordController.text.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Row(
+                                children: [
+                                  Icon(
+                                    Icons.info_outline,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      'Please enter your Email and Password',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                  ],
-                                ),
-                                backgroundColor: const Color(0xFFFF6B00),
-                                behavior: SnackBarBehavior.floating,
-                                margin: const EdgeInsets.only(
-                                  bottom: 32,
-                                  left: 24,
-                                  right: 24,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                elevation: 10,
-                                duration: const Duration(seconds: 3),
+                                  ),
+                                ],
                               ),
-                            );
-                          } else {
-                            context.go('/my_topic_page');
-                          }
-                        },
-                        child: const Text(
-                          'Log in',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                              backgroundColor: const Color(0xFFFF6B00),
+                              behavior: SnackBarBehavior.floating,
+                              margin: const EdgeInsets.only(
+                                bottom: 32,
+                                left: 24,
+                                right: 24,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              elevation: 10,
+                              duration: const Duration(seconds: 3),
+                            ),
+                          );
+                        } else {
+                          context.go('/my_topic_page');
+                        }
+                      },
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
 
                     Row(
                       children: [
@@ -238,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
 
                     _buildSocialButton(
                       'Log in with Google',

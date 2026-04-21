@@ -73,7 +73,11 @@ class CustomBottomBar extends StatelessWidget {
                 decoration: BoxDecoration(
                   // Градієнт як на дизайні
                   gradient: const LinearGradient(
-                    colors: [Color(0xFFFF8B3D), Color(0xFFFF5A00)],
+                    colors: [
+                      Color(0xFFE65C00),
+                      Color(0xFFFF7A1A),
+                      Color(0xFFFFC700),
+                    ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),

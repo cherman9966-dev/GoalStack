@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:goalstack/home/features/domain/entities/goal_entity.dart';
 import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
+import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/primary_gradient_button.dart';
 
 class AddGoalPage extends ConsumerStatefulWidget {
   const AddGoalPage({super.key});
@@ -258,44 +259,29 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
                   const SizedBox(height: 35),
 
                   // 6. КНОПКА CREATE GOAL
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFF6B00),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28),
-                        ),
-                      ),
-                      onPressed: () async {
-                        if (_titleController.text.trim().isEmpty)
-                        {return;}
-
-                        final newGoal = GoalEntity()
-                          ..title = _titleController.text.trim()
-                          ..createdAt = DateTime.now()
-                          ..status = 'active'
-                          ..streak = 0
-                          ..isCompleted = false
-                          ..color = _selectedColor
-                          ..icon = _selectedIcon;
-                        await ref.read(goalListProvider.notifier).addGoal(newGoal);
-                        context.go('/my_topic_page');
-                        context.pop();
-                        print(
-                          'Goal: ${_titleController.text}, color: $_selectedColor',
-                        );
-                      },
-                      child: const Text(
-                        'Create Goal',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                  PrimaryGradientButton(
+                    text: 'Create Goal',
+                    onPressed: () async {
+                      if (_titleController.text.trim().isEmpty) {
+                        return;
+                      }
+                      final newGoal = GoalEntity()
+                        ..title = _titleController.text.trim()
+                        ..createdAt = DateTime.now()
+                        ..status = 'active'
+                        ..streak = 0
+                        ..isCompleted = false
+                        ..color = _selectedColor
+                        ..icon = _selectedIcon;
+                      await ref
+                          .read(goalListProvider.notifier)
+                          .addGoal(newGoal);
+                      context.go('/my_topic_page');
+                      context.pop();
+                      print(
+                        'Goal: ${_titleController.text}, color: $_selectedColor',
+                      );
+                    },
                   ),
                 ],
               ),

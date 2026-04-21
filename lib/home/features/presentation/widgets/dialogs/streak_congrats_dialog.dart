@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:confetti/confetti.dart';
 import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
+import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/primary_gradient_button.dart';
 
 class StreakCongratsDialog extends ConsumerStatefulWidget {
   final int goalId;
@@ -197,33 +198,13 @@ class _StreakCongratsDialogState extends ConsumerState<StreakCongratsDialog>
                 const SizedBox(height: 32),
 
                 // КНОПКА "ПРОДОВЖИТИ"
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFF6B00),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(28),
-                      ),
-                      elevation: 8,
-                      shadowColor: const Color(0xFFFF6B00).withOpacity(0.4),
-                    ),
-                    onPressed: () {
-                      ref
-                          .read(goalListProvider.notifier)
-                          .continueStreak(widget.goalId);
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text(
-                      'Continue Streak',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                PrimaryGradientButton(
+                  text: 'Continue Streak', // Передаємо текст
+                  onPressed: () {
+                    // Передаємо функцію з Riverpod
+                    ref.read(goalListProvider.notifier).continueStreak(widget.goalId);
+                    Navigator.of(context).pop();
+                  },
                 ),
                 const SizedBox(height: 16),
 
