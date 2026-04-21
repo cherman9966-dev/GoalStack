@@ -41,18 +41,19 @@ class _MyTopicPageState extends ConsumerState<MyTopicPage> {
             final goal = goals[index];
 
             return GoalCard(
-              id: goal.id,
-              title: goal.title,
-              icon: goal.icon ?? Icons.flag,
-              iconColor: goal.color ?? Colors.blue,
+              goal: goal,
 
-              streak: goal.streak,
-              initialWeekDays: goal.weekDaysStatus,
+              // id: goal.id,
+              // title: goal.title,
+              // icon: goal.icon ?? Icons.flag,
+              // iconColor: goal.color ?? Colors.blue,
+              //
+              // streak: goal.streak,
+              // initialWeekDays: goal.weekDaysStatus,
 
               // Вогники з бази
-              onDelete: () {
-                ref.read(goalListProvider.notifier).deleteGoal(goal.id);
-
+               onDelete: () {
+               ref.read(goalListProvider.notifier).deleteGoal(goal.id);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: const Text('Goal deleted successfully'),

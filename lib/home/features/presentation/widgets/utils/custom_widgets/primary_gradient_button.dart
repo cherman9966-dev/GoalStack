@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PrimaryGradientButton extends StatelessWidget {
-  // Ці змінні роблять кнопку універсальною
   final String text;
-  final VoidCallback onPressed; // Тип для функції, яка нічого не повертає
+  final VoidCallback onPressed;
 
   const PrimaryGradientButton({
     super.key,
@@ -41,9 +40,7 @@ class PrimaryGradientButton extends StatelessWidget {
           shadowColor: Colors.transparent,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
         ),
-        // ❗️ ТУТ МИ ВИКОРИСТОВУЄМО ПЕРЕДАНУ ФУНКЦІЮ ❗️
         onPressed: onPressed,
-        // ❗️ ТУТ МИ ВИКОРИСТОВУЄМО ПЕРЕДАНИЙ ТЕКСТ ❗️
         child: Text(
           text,
           style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),

@@ -22,15 +22,21 @@ class GoalList extends _$GoalList {
     await isar.writeTxn(() async {
       await isar.collection<GoalEntity>().put(newGoal);
     });
-
     await loadGoals();
+    ref.invalidateSelf();
+  }
+
+  Future<void> updateGoal(GoalEntity updatedGoal) async {
+    await isar.writeTxn(() async {
+      await isar.goalEntitys.put(updatedGoal);
+    });
+    ref.invalidateSelf();
   }
 
   Future<void> deleteGoal(int id) async {
     await isar.writeTxn(() async {
       await isar.collection<GoalEntity>().delete(id);
     });
-
     await loadGoals();
   }
 

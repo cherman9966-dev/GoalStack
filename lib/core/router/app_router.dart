@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:goalstack/home/features/domain/entities/goal_entity.dart';
 import 'package:goalstack/home/features/presentation/pages/add_goal_page.dart';
 import 'package:goalstack/home/features/presentation/pages/callendar_page.dart';
 import 'package:goalstack/home/features/presentation/pages/login_page.dart';
@@ -19,6 +20,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/login_page',
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: '/add_goal',
+        builder: (context, state) {
+          final goal = state.extra as GoalEntity?;return AddGoalPage(goalToEdit: goal);
+        },
       ),
       GoRoute(
         path: '/add_goal',

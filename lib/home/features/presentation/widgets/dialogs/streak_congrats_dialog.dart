@@ -211,7 +211,7 @@ class _StreakCongratsDialogState extends ConsumerState<StreakCongratsDialog>
                 // КНОПКА "ЗАВЕРШИТИ"
                 SizedBox(
                   width: double.infinity,
-                  height: 52,
+                  height: 45,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,

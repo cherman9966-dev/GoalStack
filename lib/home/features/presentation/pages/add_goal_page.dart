@@ -6,15 +6,23 @@ import 'package:goalstack/home/features/presentation/providers/goal_list_provide
 import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/primary_gradient_button.dart';
 
 class AddGoalPage extends ConsumerStatefulWidget {
-  const AddGoalPage({super.key});
+  final GoalEntity? goalToEdit;
+
+  const AddGoalPage({super.key, this.goalToEdit});
 
   @override
   ConsumerState<AddGoalPage> createState() => _AddGoalPageState();
 }
 
 class _AddGoalPageState extends ConsumerState<AddGoalPage> {
-  final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
+  late final TextEditingController _titleController;
+  late final TextEditingController _descriptionController;
+  late Color _selectedColor;
+  late IconData _selectedIcon;
+
+  bool get isEditMode => widget.goalToEdit != null;
+
   final List<String> _timeOptions = [
     'Morning',
     'Afternoon',
@@ -46,7 +54,6 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
     Icons.laptop_mac,
     Icons.bedtime,
   ];
-  late IconData _selectedIcon;
 
   String? _selectedTime;
   final List<Color> _colors = [
@@ -59,27 +66,84 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
     const Color(0xFF95A5A6), // Сірий
   ];
 
-  late Color _selectedColor; // Вибраний колір
-
   @override
   void initState() {
     super.initState();
-    _selectedColor = _colors[0];
-    _selectedIcon =
-        _goalIcons[0]; // За замовчуванням вибраний перший колір (помаранчевий)
+
+    final goal = widget.goalToEdit;
+
+    if (goal != null) {
+      _titleController = TextEditingController(text: goal.title);
+      _descriptionController = TextEditingController(
+        text: goal.description ?? '',
+      );
+      _selectedColor = goal.color ?? _colors[0];
+      _selectedIcon = goal.icon ?? _goalIcons[0];
+    } else {
+      _titleController = TextEditingController();
+      _descriptionController = TextEditingController();
+
+      _selectedColor = _colors[0];
+      _selectedIcon = _goalIcons[0];
+    }
   }
 
   @override
   void dispose() {
     _titleController.dispose();
-    _descController.dispose();
+    _descriptionController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleSave() async {
+    final String title = _titleController.text.trim();
+    final String description = _descriptionController.text.trim();
+
+    if (title.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Please enter a topic title'),
+          backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+      return;
+    }
+
+    if (isEditMode) {
+      final updatedGoal = widget.goalToEdit!
+        ..title = title
+        ..description = _descriptionController.text.trim()
+        ..color = _selectedColor
+        ..icon = _selectedIcon;
+
+      await ref.read(goalListProvider.notifier).updateGoal(updatedGoal);
+
+    } else {
+      final newGoal = GoalEntity()
+        ..title = title
+        ..description = description
+        ..createdAt = DateTime.now()
+        ..status = 'active'
+        ..streak = 0
+        ..isCompleted = false
+        ..color = _selectedColor
+        ..icon = _selectedIcon;
+
+      await ref.read(goalListProvider.notifier).addGoal(newGoal);
+    }
+
+    if (mounted) {
+      print('Goal: $title, color: $_selectedColor');
+      context.go('/my_topic_page');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, // Щоб фон заходив під AppBar
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -238,7 +302,7 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
                   _buildLabel('Description'),
                   _buildTextField(
                     hint: 'Enter detailed description of the goal',
-                    controller: _descController,
+                    controller: _descriptionController,
                     maxLines: 3,
                   ),
                   const SizedBox(height: 15),
@@ -260,29 +324,33 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
 
                   // 6. КНОПКА CREATE GOAL
                   PrimaryGradientButton(
-                    text: 'Create Goal',
-                    onPressed: () async {
-                      if (_titleController.text.trim().isEmpty) {
-                        return;
-                      }
-                      final newGoal = GoalEntity()
-                        ..title = _titleController.text.trim()
-                        ..createdAt = DateTime.now()
-                        ..status = 'active'
-                        ..streak = 0
-                        ..isCompleted = false
-                        ..color = _selectedColor
-                        ..icon = _selectedIcon;
-                      await ref
-                          .read(goalListProvider.notifier)
-                          .addGoal(newGoal);
-                      context.go('/my_topic_page');
-                      context.pop();
-                      print(
-                        'Goal: ${_titleController.text}, color: $_selectedColor',
-                      );
-                    },
+                    text: isEditMode ? 'Save Changes' : 'Create Topic',
+                    onPressed: _handleSave,
                   ),
+                  // PrimaryGradientButton(
+                  //   text: isEditMode ? 'Save Changes' : 'Create Topic',
+                  //   onPressed: () async {
+                  //     if (_titleController.text.trim().isEmpty) {
+                  //       return;
+                  //     }
+                  //     final newGoal = GoalEntity()
+                  //       ..title = _titleController.text.trim()
+                  //       ..createdAt = DateTime.now()
+                  //       ..status = 'active'
+                  //       ..streak = 0
+                  //       ..isCompleted = false
+                  //       ..color = _selectedColor
+                  //       ..icon = _selectedIcon;
+                  //     await ref
+                  //         .read(goalListProvider.notifier)
+                  //         .addGoal(newGoal);
+                  //     context.go('/my_topic_page');
+                  //     context.pop();
+                  //     print(
+                  //       'Goal: ${_titleController.text}, color: $_selectedColor',
+                  //     );
+                  //   },
+                  // ),
                 ],
               ),
             ),
@@ -363,7 +431,6 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
               margin: const EdgeInsets.only(right: 12),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                // Якщо вибрано - фон стає кольором цілі!
                 color: isSelected
                     ? _selectedColor
                     : const Color(0xFF1A2A4A).withOpacity(0.2),
