@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:goalstack/home/features/domain/entities/goal_entity.dart';
 import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
+import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/goal_mode_selector.dart';
 import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/primary_gradient_button.dart';
 
 class AddGoalPage extends ConsumerStatefulWidget {
@@ -15,6 +16,12 @@ class AddGoalPage extends ConsumerStatefulWidget {
 }
 
 class _AddGoalPageState extends ConsumerState<AddGoalPage> {
+
+  String _goalType = 'all_days';
+  int _customDaysCount = 3; // Для режиму Custom
+  List<bool> _calendarSelectedDays = List.filled(7, false); // Для режиму Calendar
+  final List<String> _shortDayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
   final TextEditingController _descController = TextEditingController();
   late final TextEditingController _titleController;
   late final TextEditingController _descriptionController;
@@ -23,12 +30,6 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
 
   bool get isEditMode => widget.goalToEdit != null;
 
-  final List<String> _timeOptions = [
-    'Morning',
-    'Afternoon',
-    'Evening',
-    'Anytime',
-  ];
   final List<IconData> _goalIcons = [
     Icons.fitness_center,
     Icons.menu_book,
@@ -55,7 +56,7 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
     Icons.bedtime,
   ];
 
-  String? _selectedTime;
+  // String? _selectedTime;
   final List<Color> _colors = [
     const Color(0xFFFF6B00), // Помаранчевий
     const Color(0xFFFFB800), // Жовтий
@@ -121,6 +122,17 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
       await ref.read(goalListProvider.notifier).updateGoal(updatedGoal);
 
     } else {
+      // СТВОРЕННЯ
+      // 1. Вираховуємо, скільки вогників нам потрібно створити
+      int firesCount = 7; // За замовчуванням для 'all_days'
+      if (_goalType == 'custom') {
+        firesCount = _customDaysCount;
+      } else if (_goalType == 'calendar') {
+        // Рахуємо, скільки днів (true) юзер виділив у календарі
+        firesCount = _calendarSelectedDays.where((day) => day == true).length;
+      }
+
+      // 2. Створюємо ціль з новими полями
       final newGoal = GoalEntity()
         ..title = title
         ..description = description
@@ -129,7 +141,13 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
         ..streak = 0
         ..isCompleted = false
         ..color = _selectedColor
-        ..icon = _selectedIcon;
+        ..icon = _selectedIcon
+      // --- НОВІ ПОЛЯ ---
+        ..goalType = _goalType
+        ..customTargetDays = _customDaysCount
+        ..calendarSelectedDays = _calendarSelectedDays
+      // --- ДИНАМІЧНІ ВОГНИКИ ---
+        ..weekDaysStatus = List.filled(firesCount, false);
 
       await ref.read(goalListProvider.notifier).addGoal(newGoal);
     }
@@ -214,88 +232,26 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
                   ),
                   const SizedBox(height: 16),
 
-                  LayoutBuilder(
-                    builder:
-                        (BuildContext context, BoxConstraints constraints) {
-                          return PopupMenuButton<String>(
-                            initialValue: _selectedTime,
-                            position: PopupMenuPosition.under,
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            constraints: BoxConstraints(
-                              minWidth: constraints.maxWidth,
-                              maxWidth: constraints.maxWidth,
-                            ),
-
-                            onSelected: (String newValue) {
-                              setState(() {
-                                _selectedTime = newValue;
-                              });
-                            },
-                            itemBuilder: (BuildContext context) {
-                              return _timeOptions.map((String time) {
-                                return PopupMenuItem<String>(
-                                  value: time,
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.access_time,
-                                        color: Colors.grey,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Text(
-                                        time,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }).toList();
-                            },
-
-                            // ВІЗУАЛЬНИЙ ДИЗАЙН КНОПКИ (лежить всередині меню)
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 16,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.access_time,
-                                    color: Colors.grey,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text(
-                                      _selectedTime ?? 'Select time',
-                                      style: TextStyle(
-                                        color: _selectedTime == null
-                                            ? Colors.black38
-                                            : Colors.black,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: Colors.grey.shade400,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
+                  // Вставляємо замість старого LayoutBuilder
+                  GoalModeSelector(
+                    goalType: _goalType,
+                    customDaysCount: _customDaysCount,
+                    calendarSelectedDays: _calendarSelectedDays,
+                    selectedColor: _selectedColor,
+                    onTypeChanged: (type) {
+                      setState(() => _goalType = type);
+                    },
+                    onCustomDaysChanged: (count) {
+                      setState(() => _customDaysCount = count);
+                    },
+                    onCalendarDayToggled: (index) {
+                      setState(() {
+                        _calendarSelectedDays[index] = !_calendarSelectedDays[index];
+                      });
+                    },
                   ),
+
+
                   const SizedBox(height: 20),
 
                   // 3. DESCRIPTION
@@ -327,30 +283,6 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
                     text: isEditMode ? 'Save Changes' : 'Create Topic',
                     onPressed: _handleSave,
                   ),
-                  // PrimaryGradientButton(
-                  //   text: isEditMode ? 'Save Changes' : 'Create Topic',
-                  //   onPressed: () async {
-                  //     if (_titleController.text.trim().isEmpty) {
-                  //       return;
-                  //     }
-                  //     final newGoal = GoalEntity()
-                  //       ..title = _titleController.text.trim()
-                  //       ..createdAt = DateTime.now()
-                  //       ..status = 'active'
-                  //       ..streak = 0
-                  //       ..isCompleted = false
-                  //       ..color = _selectedColor
-                  //       ..icon = _selectedIcon;
-                  //     await ref
-                  //         .read(goalListProvider.notifier)
-                  //         .addGoal(newGoal);
-                  //     context.go('/my_topic_page');
-                  //     context.pop();
-                  //     print(
-                  //       'Goal: ${_titleController.text}, color: $_selectedColor',
-                  //     );
-                  //   },
-                  // ),
                 ],
               ),
             ),

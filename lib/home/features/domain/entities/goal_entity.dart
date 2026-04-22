@@ -35,5 +35,11 @@ class GoalEntity {
   @ignore
   set color(Color? value) => colorValue = value?.value;
 
+  String goalType = 'all_days';
+
+  int customTargetDays = 3;
+
+  List<bool> calendarSelectedDays = [];
+
   GoalEntity();
 }

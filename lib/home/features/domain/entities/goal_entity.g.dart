@@ -17,58 +17,73 @@ const GoalEntitySchema = CollectionSchema(
   name: r'GoalEntity',
   id: -5725872661757418951,
   properties: {
-    r'colorValue': PropertySchema(
+    r'calendarSelectedDays': PropertySchema(
       id: 0,
+      name: r'calendarSelectedDays',
+      type: IsarType.boolList,
+    ),
+    r'colorValue': PropertySchema(
+      id: 1,
       name: r'colorValue',
       type: IsarType.long,
     ),
     r'completedDates': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'completedDates',
       type: IsarType.dateTimeList,
     ),
     r'createdAt': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'createdAt',
       type: IsarType.dateTime,
     ),
+    r'customTargetDays': PropertySchema(
+      id: 4,
+      name: r'customTargetDays',
+      type: IsarType.long,
+    ),
     r'description': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'description',
       type: IsarType.string,
     ),
+    r'goalType': PropertySchema(
+      id: 6,
+      name: r'goalType',
+      type: IsarType.string,
+    ),
     r'iconCodePoint': PropertySchema(
-      id: 4,
+      id: 7,
       name: r'iconCodePoint',
       type: IsarType.long,
     ),
     r'isCompleted': PropertySchema(
-      id: 5,
+      id: 8,
       name: r'isCompleted',
       type: IsarType.bool,
     ),
     r'scheduledTime': PropertySchema(
-      id: 6,
+      id: 9,
       name: r'scheduledTime',
       type: IsarType.dateTime,
     ),
     r'status': PropertySchema(
-      id: 7,
+      id: 10,
       name: r'status',
       type: IsarType.string,
     ),
     r'streak': PropertySchema(
-      id: 8,
+      id: 11,
       name: r'streak',
       type: IsarType.long,
     ),
     r'title': PropertySchema(
-      id: 9,
+      id: 12,
       name: r'title',
       type: IsarType.string,
     ),
     r'weekDaysStatus': PropertySchema(
-      id: 10,
+      id: 13,
       name: r'weekDaysStatus',
       type: IsarType.boolList,
     )
@@ -93,6 +108,7 @@ int _goalEntityEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.calendarSelectedDays.length;
   bytesCount += 3 + object.completedDates.length * 8;
   {
     final value = object.description;
@@ -100,6 +116,7 @@ int _goalEntityEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.goalType.length * 3;
   bytesCount += 3 + object.status.length * 3;
   bytesCount += 3 + object.title.length * 3;
   bytesCount += 3 + object.weekDaysStatus.length;
@@ -112,17 +129,20 @@ void _goalEntitySerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.colorValue);
-  writer.writeDateTimeList(offsets[1], object.completedDates);
-  writer.writeDateTime(offsets[2], object.createdAt);
-  writer.writeString(offsets[3], object.description);
-  writer.writeLong(offsets[4], object.iconCodePoint);
-  writer.writeBool(offsets[5], object.isCompleted);
-  writer.writeDateTime(offsets[6], object.scheduledTime);
-  writer.writeString(offsets[7], object.status);
-  writer.writeLong(offsets[8], object.streak);
-  writer.writeString(offsets[9], object.title);
-  writer.writeBoolList(offsets[10], object.weekDaysStatus);
+  writer.writeBoolList(offsets[0], object.calendarSelectedDays);
+  writer.writeLong(offsets[1], object.colorValue);
+  writer.writeDateTimeList(offsets[2], object.completedDates);
+  writer.writeDateTime(offsets[3], object.createdAt);
+  writer.writeLong(offsets[4], object.customTargetDays);
+  writer.writeString(offsets[5], object.description);
+  writer.writeString(offsets[6], object.goalType);
+  writer.writeLong(offsets[7], object.iconCodePoint);
+  writer.writeBool(offsets[8], object.isCompleted);
+  writer.writeDateTime(offsets[9], object.scheduledTime);
+  writer.writeString(offsets[10], object.status);
+  writer.writeLong(offsets[11], object.streak);
+  writer.writeString(offsets[12], object.title);
+  writer.writeBoolList(offsets[13], object.weekDaysStatus);
 }
 
 GoalEntity _goalEntityDeserialize(
@@ -132,18 +152,21 @@ GoalEntity _goalEntityDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = GoalEntity();
-  object.colorValue = reader.readLongOrNull(offsets[0]);
-  object.completedDates = reader.readDateTimeList(offsets[1]) ?? [];
-  object.createdAt = reader.readDateTime(offsets[2]);
-  object.description = reader.readStringOrNull(offsets[3]);
-  object.iconCodePoint = reader.readLongOrNull(offsets[4]);
+  object.calendarSelectedDays = reader.readBoolList(offsets[0]) ?? [];
+  object.colorValue = reader.readLongOrNull(offsets[1]);
+  object.completedDates = reader.readDateTimeList(offsets[2]) ?? [];
+  object.createdAt = reader.readDateTime(offsets[3]);
+  object.customTargetDays = reader.readLong(offsets[4]);
+  object.description = reader.readStringOrNull(offsets[5]);
+  object.goalType = reader.readString(offsets[6]);
+  object.iconCodePoint = reader.readLongOrNull(offsets[7]);
   object.id = id;
-  object.isCompleted = reader.readBool(offsets[5]);
-  object.scheduledTime = reader.readDateTimeOrNull(offsets[6]);
-  object.status = reader.readString(offsets[7]);
-  object.streak = reader.readLong(offsets[8]);
-  object.title = reader.readString(offsets[9]);
-  object.weekDaysStatus = reader.readBoolList(offsets[10]) ?? [];
+  object.isCompleted = reader.readBool(offsets[8]);
+  object.scheduledTime = reader.readDateTimeOrNull(offsets[9]);
+  object.status = reader.readString(offsets[10]);
+  object.streak = reader.readLong(offsets[11]);
+  object.title = reader.readString(offsets[12]);
+  object.weekDaysStatus = reader.readBoolList(offsets[13]) ?? [];
   return object;
 }
 
@@ -155,26 +178,32 @@ P _goalEntityDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readBoolList(offset) ?? []) as P;
     case 1:
-      return (reader.readDateTimeList(offset) ?? []) as P;
-    case 2:
-      return (reader.readDateTime(offset)) as P;
-    case 3:
-      return (reader.readStringOrNull(offset)) as P;
-    case 4:
       return (reader.readLongOrNull(offset)) as P;
-    case 5:
-      return (reader.readBool(offset)) as P;
-    case 6:
-      return (reader.readDateTimeOrNull(offset)) as P;
-    case 7:
-      return (reader.readString(offset)) as P;
-    case 8:
+    case 2:
+      return (reader.readDateTimeList(offset) ?? []) as P;
+    case 3:
+      return (reader.readDateTime(offset)) as P;
+    case 4:
       return (reader.readLong(offset)) as P;
-    case 9:
+    case 5:
+      return (reader.readStringOrNull(offset)) as P;
+    case 6:
       return (reader.readString(offset)) as P;
+    case 7:
+      return (reader.readLongOrNull(offset)) as P;
+    case 8:
+      return (reader.readBool(offset)) as P;
+    case 9:
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 10:
+      return (reader.readString(offset)) as P;
+    case 11:
+      return (reader.readLong(offset)) as P;
+    case 12:
+      return (reader.readString(offset)) as P;
+    case 13:
       return (reader.readBoolList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -272,6 +301,105 @@ extension GoalEntityQueryWhere
 
 extension GoalEntityQueryFilter
     on QueryBuilder<GoalEntity, GoalEntity, QFilterCondition> {
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      calendarSelectedDaysElementEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'calendarSelectedDays',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      calendarSelectedDaysLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'calendarSelectedDays',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      calendarSelectedDaysIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'calendarSelectedDays',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      calendarSelectedDaysIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'calendarSelectedDays',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      calendarSelectedDaysLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'calendarSelectedDays',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      calendarSelectedDaysLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'calendarSelectedDays',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      calendarSelectedDaysLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'calendarSelectedDays',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
       colorValueIsNull() {
     return QueryBuilder.apply(this, (query) {
@@ -545,6 +673,62 @@ extension GoalEntityQueryFilter
   }
 
   QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      customTargetDaysEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'customTargetDays',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      customTargetDaysGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'customTargetDays',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      customTargetDaysLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'customTargetDays',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      customTargetDaysBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'customTargetDays',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
       descriptionIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -693,6 +877,140 @@ extension GoalEntityQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'description',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition> goalTypeEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'goalType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      goalTypeGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'goalType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition> goalTypeLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'goalType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition> goalTypeBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'goalType',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      goalTypeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'goalType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition> goalTypeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'goalType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition> goalTypeContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'goalType',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition> goalTypeMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'goalType',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      goalTypeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'goalType',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      goalTypeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'goalType',
         value: '',
       ));
     });
@@ -1356,6 +1674,19 @@ extension GoalEntityQuerySortBy
     });
   }
 
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> sortByCustomTargetDays() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'customTargetDays', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy>
+      sortByCustomTargetDaysDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'customTargetDays', Sort.desc);
+    });
+  }
+
   QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> sortByDescription() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'description', Sort.asc);
@@ -1365,6 +1696,18 @@ extension GoalEntityQuerySortBy
   QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> sortByDescriptionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'description', Sort.desc);
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> sortByGoalType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'goalType', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> sortByGoalTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'goalType', Sort.desc);
     });
   }
 
@@ -1467,6 +1810,19 @@ extension GoalEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> thenByCustomTargetDays() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'customTargetDays', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy>
+      thenByCustomTargetDaysDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'customTargetDays', Sort.desc);
+    });
+  }
+
   QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> thenByDescription() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'description', Sort.asc);
@@ -1476,6 +1832,18 @@ extension GoalEntityQuerySortThenBy
   QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> thenByDescriptionDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'description', Sort.desc);
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> thenByGoalType() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'goalType', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> thenByGoalTypeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'goalType', Sort.desc);
     });
   }
 
@@ -1566,6 +1934,13 @@ extension GoalEntityQuerySortThenBy
 
 extension GoalEntityQueryWhereDistinct
     on QueryBuilder<GoalEntity, GoalEntity, QDistinct> {
+  QueryBuilder<GoalEntity, GoalEntity, QDistinct>
+      distinctByCalendarSelectedDays() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'calendarSelectedDays');
+    });
+  }
+
   QueryBuilder<GoalEntity, GoalEntity, QDistinct> distinctByColorValue() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'colorValue');
@@ -1584,10 +1959,23 @@ extension GoalEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<GoalEntity, GoalEntity, QDistinct> distinctByCustomTargetDays() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'customTargetDays');
+    });
+  }
+
   QueryBuilder<GoalEntity, GoalEntity, QDistinct> distinctByDescription(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'description', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QDistinct> distinctByGoalType(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'goalType', caseSensitive: caseSensitive);
     });
   }
 
@@ -1644,6 +2032,13 @@ extension GoalEntityQueryProperty
     });
   }
 
+  QueryBuilder<GoalEntity, List<bool>, QQueryOperations>
+      calendarSelectedDaysProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'calendarSelectedDays');
+    });
+  }
+
   QueryBuilder<GoalEntity, int?, QQueryOperations> colorValueProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'colorValue');
@@ -1663,9 +2058,21 @@ extension GoalEntityQueryProperty
     });
   }
 
+  QueryBuilder<GoalEntity, int, QQueryOperations> customTargetDaysProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'customTargetDays');
+    });
+  }
+
   QueryBuilder<GoalEntity, String?, QQueryOperations> descriptionProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'description');
+    });
+  }
+
+  QueryBuilder<GoalEntity, String, QQueryOperations> goalTypeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'goalType');
     });
   }
 
