@@ -4,16 +4,20 @@ import 'package:goalstack/home/features/domain/entities/goal_entity.dart';
 import 'package:goalstack/home/features/presentation/widgets/card/logic/dynamic_motivator.dart';
 import 'package:goalstack/home/features/presentation/widgets/card/logic/streak_calculator.dart';
 import 'package:goalstack/home/features/presentation/widgets/dialogs/streak_congrats_dialog.dart';
+import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
 class GoalCard extends StatefulWidget {
   final GoalEntity goal;
-  final VoidCallback onDelete; // Залишаємо тільки дії (callback), яких немає в моделі
+  final VoidCallback onDelete;
+  final Function(GoalEntity) onUpdate;
 
   const GoalCard({
     super.key,
     required this.goal,
     required this.onDelete,
+    required this.onUpdate,
   });
 
   @override
@@ -107,14 +111,10 @@ class _GoalCardState extends State<GoalCard> {
         widget.onDelete();
       },
 
-      // --- САМА КАРТКА ---
-      // Обгортаємо всю картку
+
       child: GestureDetector(
-        // behavior: HitTestBehavior.opaque гарантує, що клік спрацює навіть на порожньому місці між текстом
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          // ❗️ ВАЖЛИВО: Переконайся, що у тебе в конструкторі GoalCard є поле final GoalEntity goal;
-          // Якщо так, ми просто передаємо цей об'єкт на екран редагування
           context.push('/add_goal', extra: widget.goal);
         },
         child: Container(
@@ -139,9 +139,7 @@ class _GoalCardState extends State<GoalCard> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Іконка заданого кольору
-                  // (Якщо ти змінив конструктор на widget.goal, то тут буде widget.goal.icon)
-                  Icon(widget.goal.icon, color: widget.goal.color, size: 38),
+                  Icon(widget.goal.icon, color: widget.goal.color, size: 32),
                   const SizedBox(width: 16),
 
                   // Назва цілі
@@ -188,17 +186,20 @@ class _GoalCardState extends State<GoalCard> {
                         children: [
                           // Це твій ВНУТРІШНІЙ GestureDetector (він має пріоритет при натисканні сюди)
                           GestureDetector(
-                            onTap: () {
+                            onTap: () async{
                               setState(() {
                                 _weekDaysStatus[index] = !_weekDaysStatus[index];
                               });
+                              final updatedGoal = widget.goal
+                                ..weekDaysStatus = _weekDaysStatus;
+                              widget.onUpdate(updatedGoal);
                               final isAllDaysCompleted = _weekDaysStatus.every((status) => status == true);
                               if (isAllDaysCompleted) {
                                 showDialog(
                                   context: context,
                                   barrierColor: Colors.black.withOpacity(0.6),
                                   builder: (context) {
-                                    return StreakCongratsDialog(goalId: widget.goal.id); // Або widget.goal.id
+                                    return StreakCongratsDialog(goalId: widget.goal.id);
                                   },
                                 );
                               }

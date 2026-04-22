@@ -30,7 +30,8 @@ class GoalList extends _$GoalList {
     await isar.writeTxn(() async {
       await isar.goalEntitys.put(updatedGoal);
     });
-    ref.invalidateSelf();
+    final newList = await isar.goalEntitys.where().findAll();
+    state = newList;
   }
 
   Future<void> deleteGoal(int id) async {

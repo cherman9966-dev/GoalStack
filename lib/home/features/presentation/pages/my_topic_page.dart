@@ -42,16 +42,10 @@ class _MyTopicPageState extends ConsumerState<MyTopicPage> {
 
             return GoalCard(
               goal: goal,
-
-              // id: goal.id,
-              // title: goal.title,
-              // icon: goal.icon ?? Icons.flag,
-              // iconColor: goal.color ?? Colors.blue,
-              //
-              // streak: goal.streak,
-              // initialWeekDays: goal.weekDaysStatus,
-
               // Вогники з бази
+              onUpdate: (updatedGoal) {
+                ref.read(goalListProvider.notifier).updateGoal(updatedGoal);
+              },
                onDelete: () {
                ref.read(goalListProvider.notifier).deleteGoal(goal.id);
                 ScaffoldMessenger.of(context).showSnackBar(
