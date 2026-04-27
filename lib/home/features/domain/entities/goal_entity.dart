@@ -18,6 +18,8 @@ class GoalEntity {
 
   List<bool> weekDaysStatus = [false, false, false, false, false, false, false];
 
+  List<DateTime> streakEarnedDates = [];
+
   int? iconCodePoint;
   int? colorValue;
 

@@ -28,7 +28,7 @@ class MainLayout extends ConsumerWidget {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/images/main_background2.png',
+              'assets/images/log_background_fon.png',
               fit: BoxFit.cover,
             ),
           ),

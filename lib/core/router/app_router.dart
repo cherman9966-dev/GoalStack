@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:goalstack/home/features/domain/entities/goal_entity.dart';
 import 'package:goalstack/home/features/presentation/pages/add_goal_page.dart';
-import 'package:goalstack/home/features/presentation/pages/callendar_page.dart';
+import 'package:goalstack/home/features/presentation/pages/calendar_page.dart';
 import 'package:goalstack/home/features/presentation/pages/login_page.dart';
 import 'package:goalstack/home/features/presentation/pages/my_topic_page.dart';
 import 'package:goalstack/home/features/presentation/pages/setting_page.dart';
@@ -42,7 +42,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: '/calendar',
-            builder: (context, state) => const CallendarPage(),
+            builder: (context, state) => const CalendarPage(),
           ),
           GoRoute(
             path: '/settings',

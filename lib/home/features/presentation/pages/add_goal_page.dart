@@ -19,10 +19,8 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
 
   String _goalType = 'all_days';
   int _customDaysCount = 3; // Для режиму Custom
-  List<bool> _calendarSelectedDays = List.filled(7, false); // Для режиму Calendar
-  final List<String> _shortDayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  List<bool> _calendarSelectedDays = List.filled(7, false);
 
-  final TextEditingController _descController = TextEditingController();
   late final TextEditingController _titleController;
   late final TextEditingController _descriptionController;
   late Color _selectedColor;
@@ -56,14 +54,15 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
     Icons.bedtime,
   ];
 
-  // String? _selectedTime;
+
   final List<Color> _colors = [
+    const Color(0xFFFF2D55), // Малиново-червоний
     const Color(0xFFFF6B00), // Помаранчевий
     const Color(0xFFFFB800), // Жовтий
     const Color(0xFF00C48C), // Зелений
     const Color(0xFF0084F4), // Синій
     const Color(0xFF6A4CFF), // Фіолетовий
-    const Color(0xFF2C3E50), // Темно-синій
+    const Color(0xFF5AC8FA), // Світло-синій
     const Color(0xFF95A5A6), // Сірий
   ];
 
@@ -122,17 +121,14 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
       await ref.read(goalListProvider.notifier).updateGoal(updatedGoal);
 
     } else {
-      // СТВОРЕННЯ
-      // 1. Вираховуємо, скільки вогників нам потрібно створити
-      int firesCount = 7; // За замовчуванням для 'all_days'
+      int firesCount = 7;
       if (_goalType == 'custom') {
         firesCount = _customDaysCount;
       } else if (_goalType == 'calendar') {
-        // Рахуємо, скільки днів (true) юзер виділив у календарі
         firesCount = _calendarSelectedDays.where((day) => day == true).length;
       }
 
-      // 2. Створюємо ціль з новими полями
+
       final newGoal = GoalEntity()
         ..title = title
         ..description = description
@@ -142,11 +138,9 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
         ..isCompleted = false
         ..color = _selectedColor
         ..icon = _selectedIcon
-      // --- НОВІ ПОЛЯ ---
         ..goalType = _goalType
         ..customTargetDays = _customDaysCount
         ..calendarSelectedDays = _calendarSelectedDays
-      // --- ДИНАМІЧНІ ВОГНИКИ ---
         ..weekDaysStatus = List.filled(firesCount, false);
 
       await ref.read(goalListProvider.notifier).addGoal(newGoal);
@@ -166,8 +160,8 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Add Goal',
+        title:  Text(
+          isEditMode ? 'Edit Goal' : 'Add Goal',
           style: TextStyle(
             color: Colors.white,
             fontSize: 22,
@@ -233,6 +227,7 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
                   const SizedBox(height: 16),
 
                   // Вставляємо замість старого LayoutBuilder
+                  if (!isEditMode)
                   GoalModeSelector(
                     goalType: _goalType,
                     customDaysCount: _customDaysCount,
@@ -292,7 +287,7 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
     );
   }
 
-  // --- ДОПОМІЖНІ ВІДЖЕТИ (Щоб код був чистим) ---
+  // --- ДОПОМІЖНІ ВІДЖЕТИ  ---
 
   Widget _buildLabel(String text) {
     return Padding(

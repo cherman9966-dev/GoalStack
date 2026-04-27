@@ -222,7 +222,7 @@ class _StreakCongratsDialogState extends ConsumerState<StreakCongratsDialog>
                       ),
                     ),
                     onPressed: () {
-                      // ref.read(goalListProvider.notifier).completeGoal(widget.goalId);
+                       ref.read(goalListProvider.notifier).completeGoal(widget.goalId);
                       Navigator.of(context).pop();
                     },
                     child: const Text(

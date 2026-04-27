@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:goalstack/core/utils/day_extensions.dart';
 import 'package:goalstack/home/features/domain/entities/goal_entity.dart';
 import 'package:goalstack/home/features/presentation/widgets/card/logic/dynamic_motivator.dart';
+import 'package:goalstack/home/features/presentation/widgets/card/logic/goal_fire_row.dart';
 import 'package:goalstack/home/features/presentation/widgets/card/logic/streak_calculator.dart';
 import 'package:goalstack/home/features/presentation/widgets/dialogs/streak_congrats_dialog.dart';
-import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 
 class GoalCard extends StatefulWidget {
   final GoalEntity goal;
@@ -26,15 +25,6 @@ class GoalCard extends StatefulWidget {
 
 class _GoalCardState extends State<GoalCard> {
   late List<bool> _weekDaysStatus;
-  final List<String> _dayNames = [
-    'MON',
-    'TUE',
-    'WED',
-    'THU',
-    'FRI',
-    'SAT',
-    'SUN',
-  ];
 
   @override
   void initState() {
@@ -44,16 +34,26 @@ class _GoalCardState extends State<GoalCard> {
   }
 
   @override
+  void didUpdateWidget(covariant GoalCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.goal.weekDaysStatus != widget.goal.weekDaysStatus) {
+      setState(() {
+        _weekDaysStatus = List.from(widget.goal.weekDaysStatus);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final int activeFires = _weekDaysStatus.where((isCompleted) => isCompleted).length;
+    final int activeFires = _weekDaysStatus
+        .where((isCompleted) => isCompleted)
+        .length;
     final bool isPerfectWeek = activeFires == 7;
     final int liveStreak = StreakCalculator.calculate(_weekDaysStatus);
     return Dismissible(
       key: UniqueKey(),
       direction: DismissDirection.endToStart,
-      dismissThresholds: const {
-        DismissDirection.endToStart: 0.2,
-      },
+      dismissThresholds: const {DismissDirection.endToStart: 0.2},
 
       // Фон, який видно під час свайпу (Червоний з корзиною)
       background: Container(
@@ -111,7 +111,6 @@ class _GoalCardState extends State<GoalCard> {
         widget.onDelete();
       },
 
-
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
@@ -161,11 +160,18 @@ class _GoalCardState extends State<GoalCard> {
                       // Текст Streak
                       Text(
                         '$liveStreak days streak!',
-                        style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 14),
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.6),
+                          fontSize: 14,
+                        ),
                       ),
                       const SizedBox(height: 2),
 
-                      DynamicMotivator(activeFires: activeFires),
+                      DynamicMotivator(
+                        activeFires: _weekDaysStatus
+                            .where((status) => status == true).length,
+                        totalFires: _weekDaysStatus.length,
+                      ),
                     ],
                   ),
                 ],
@@ -173,73 +179,123 @@ class _GoalCardState extends State<GoalCard> {
               const SizedBox(height: 24),
 
               // 2. НИЖНІЙ РЯДОК: Вогники
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(7, (index) {
-                  final bool isCompleted = index < _weekDaysStatus.length
-                      ? _weekDaysStatus[index]
-                      : false;
-                  return Column(
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // Це твій ВНУТРІШНІЙ GestureDetector (він має пріоритет при натисканні сюди)
-                          GestureDetector(
-                            onTap: () async{
-                              setState(() {
-                                _weekDaysStatus[index] = !_weekDaysStatus[index];
-                              });
-                              final updatedGoal = widget.goal
-                                ..weekDaysStatus = _weekDaysStatus;
-                              widget.onUpdate(updatedGoal);
-                              final isAllDaysCompleted = _weekDaysStatus.every((status) => status == true);
-                              if (isAllDaysCompleted) {
-                                showDialog(
-                                  context: context,
-                                  barrierColor: Colors.black.withOpacity(0.6),
-                                  builder: (context) {
-                                    return StreakCongratsDialog(goalId: widget.goal.id);
-                                  },
-                                );
-                              }
-                            },
-                            child: Container(
-                              width: 43,
-                              height: 43,
-                              decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle
-                              ),
-                              child: Center(
-                                child: Image.asset(
-                                  isCompleted
-                                      ? 'assets/icons/fire_flame.png'
-                                      : 'assets/icons/grey_fire.png',
-                                  width: 34,
-                                  height: 34,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+              GoalFiresRow(
+                goal: widget.goal,
+                weekDaysStatus: _weekDaysStatus,
+                onFireTapped: (index) async {
+                  // 1. Оновлюємо локальний UI
+                  setState(() {
+                    _weekDaysStatus[index] = !_weekDaysStatus[index];
+                  });
 
-                      const SizedBox(height: 8),
-                      // Назва дня
-                      Text(
-                        _dayNames[index],
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.5),
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
+                  // 2. Готуємо оновлену ціль
+                  final updatedGoal = widget.goal;
+                  updatedGoal.weekDaysStatus = List.from(_weekDaysStatus); // Створюємо копію масиву
+
+                  // --- ДОДАЄМО ЛОГІКУ КАЛЕНДАРЯ ---
+                  final today = DateTime.now().dateOnly; // Наш новий Extension
+
+                  // Створюємо новий список дат, щоб Isar побачив зміни
+                  final updatedDates = List<DateTime>.from(updatedGoal.completedDates);
+
+                  // Якщо хоча б один вогник горить — додаємо дату, якщо всі згасли — прибираємо
+                  if (_weekDaysStatus.contains(true)) {
+                    if (!updatedDates.contains(today)) {
+                      updatedDates.add(today);
+                    }
+                  } else {
+                    updatedDates.remove(today);
+                  }
+
+                  updatedGoal.completedDates = updatedDates;
+
+                  // 3. Відправляємо оновлену ціль у провайдер
+                  widget.onUpdate(updatedGoal);
+
+                  // 4. Перевірка на завершення Streak
+                  final isAllDaysCompleted = _weekDaysStatus.every(
+                        (status) => status == true,
                   );
-                }),
+
+                  if (isAllDaysCompleted) {
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withOpacity(0.6),
+                      builder: (context) {
+                        return StreakCongratsDialog(goalId: widget.goal.id);
+                      },
+                    );
+                  }
+                },
               ),
+
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: List.generate(7, (index) {
+              //     final bool isCompleted = index < _weekDaysStatus.length
+              //         ? _weekDaysStatus[index]
+              //         : false;
+              //     return Column(
+              //       children: [
+              //         Stack(
+              //           alignment: Alignment.center,
+              //           children: [
+              //             // Це твій ВНУТРІШНІЙ GestureDetector (він має пріоритет при натисканні сюди)
+              //             GestureDetector(
+              //               onTap: () async{
+              //                 setState(() {
+              //                   _weekDaysStatus[index] = !_weekDaysStatus[index];
+              //                 });
+              //                 final updatedGoal = widget.goal
+              //                   ..weekDaysStatus = _weekDaysStatus;
+              //                 widget.onUpdate(updatedGoal);
+              //                 final isAllDaysCompleted = _weekDaysStatus.every((status) => status == true);
+              //                 if (isAllDaysCompleted) {
+              //                   showDialog(
+              //                     context: context,
+              //                     barrierColor: Colors.black.withOpacity(0.6),
+              //                     builder: (context) {
+              //                       return StreakCongratsDialog(goalId: widget.goal.id);
+              //                     },
+              //                   );
+              //                 }
+              //               },
+              //               child: Container(
+              //                 width: 43,
+              //                 height: 43,
+              //                 decoration: const BoxDecoration(
+              //                     color: Colors.white,
+              //                     shape: BoxShape.circle
+              //                 ),
+              //                 child: Center(
+              //                   child: Image.asset(
+              //                     isCompleted
+              //                         ? 'assets/icons/fire_flame.png'
+              //                         : 'assets/icons/grey_fire.png',
+              //                     width: 34,
+              //                     height: 34,
+              //                     fit: BoxFit.contain,
+              //                   ),
+              //                 ),
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //
+              //         const SizedBox(height: 8),
+              //         // Назва дня
+              //         Text(
+              //           _dayNames[index],
+              //           style: TextStyle(
+              //             color: Colors.white.withOpacity(0.5),
+              //             fontSize: 11,
+              //             fontWeight: FontWeight.w600,
+              //           ),
+              //         ),
+              //       ],
+              //     );
+              //   }),
+              // ),
             ],
           ),
         ),

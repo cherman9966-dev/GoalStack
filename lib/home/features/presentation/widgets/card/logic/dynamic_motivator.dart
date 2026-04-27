@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 
 class DynamicMotivator extends StatelessWidget {
-  final int activeFires; // Приймаємо кількість вогників ззовні
+  final int activeFires;
+  final int totalFires;
 
-  const DynamicMotivator({super.key, required this.activeFires});
+  const DynamicMotivator({
+    super.key,
+    required this.activeFires,
+    required this.totalFires,
+  });
 
   @override
   Widget build(BuildContext context) {
     // 1. Якщо ідеальний тиждень - малюємо золоту плашку
-    if (activeFires == 7) {
+    if (activeFires == totalFires && totalFires > 0) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
@@ -31,12 +36,18 @@ class DynamicMotivator extends StatelessWidget {
     String motivatorText;
     if (activeFires == 0) {
       motivatorText = "Time to do!";
-    } else if (activeFires <= 2) {
+    } else if (activeFires <= 1) {
       motivatorText = "Nice start!";
-    } else if (activeFires <= 4) {
+    } else if (activeFires <= 2) {
       motivatorText = "Good job!";
+    } else if (activeFires <= 3) {
+      motivatorText = "Great work!";
+    } else if (activeFires <= 4) {
+      motivatorText = "Get more!";
+    } else if (activeFires <= 5) {
+      motivatorText = "Keep it up!";
     } else {
-      motivatorText = "The best!";
+      motivatorText = "Almost there!";
     }
 
     // 3. Повертаємо звичайний текст

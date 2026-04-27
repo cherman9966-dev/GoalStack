@@ -24,13 +24,13 @@ class GoalModeSelector extends StatelessWidget {
 
   // Локальна константа для назв днів
   static const List<String> _shortDayNames = [
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat',
-    'Sun',
+    'MON',
+    'TUE',
+    'WED',
+    'THU',
+    'FRI',
+    'SAT',
+    'SUN',
   ];
 
   @override

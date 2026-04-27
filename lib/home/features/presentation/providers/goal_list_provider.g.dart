@@ -6,12 +6,11 @@ part of 'goal_list_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goalListHash() => r'48721c991e5b23e3907629bc742194aaa898d5e5';
+String _$goalListHash() => r'6a31a9ed66a5c3fa685f1196d913b0439b8f7e55';
 
 /// See also [GoalList].
 @ProviderFor(GoalList)
-final goalListProvider =
-    AutoDisposeNotifierProvider<GoalList, List<GoalEntity>>.internal(
+final goalListProvider = NotifierProvider<GoalList, List<GoalEntity>>.internal(
   GoalList.new,
   name: r'goalListProvider',
   debugGetCreateSourceHash:
@@ -20,6 +19,6 @@ final goalListProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$GoalList = AutoDisposeNotifier<List<GoalEntity>>;
+typedef _$GoalList = Notifier<List<GoalEntity>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
