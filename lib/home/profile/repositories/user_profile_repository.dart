@@ -24,4 +24,12 @@ class UserProfileRepository {
       await isar.userProfileEntitys.put(profile);
     });
   }
-}
+
+  Future<void> updateNotificationsEnabled(bool enabled) async {
+    await isar.writeTxn(() async {
+      final profile = await isar.userProfileEntitys.get(0) ?? UserProfileEntity();
+      profile.notificationsEnabled = enabled;
+      await isar.userProfileEntitys.put(profile);
+    });
+  }
+  }

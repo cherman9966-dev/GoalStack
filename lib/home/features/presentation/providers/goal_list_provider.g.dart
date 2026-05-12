@@ -21,7 +21,7 @@ final hasActiveGoalsProvider = AutoDisposeProvider<bool>.internal(
 );
 
 typedef HasActiveGoalsRef = AutoDisposeProviderRef<bool>;
-String _$goalListHash() => r'1a4fc6cc779e6a5db903490e77fa843976330468';
+String _$goalListHash() => r'd8e6409bf50e5c00a44a35bb9bdc9fe8d01d8e62';
 
 /// See also [GoalList].
 @ProviderFor(GoalList)

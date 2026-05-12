@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:goalstack/core/services/notification_service.dart';
 import 'package:goalstack/home/features/data/repositories/goal_repository_impl.dart';
 import 'package:goalstack/home/features/presentation/providers/repository_provider.dart';
 import 'package:goalstack/home/features/presentation/providers/user_profile_provider.dart';
@@ -13,6 +14,9 @@ late Isar isar;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Ініціалізація сервісу сповіщень
+  await NotificationService.init();
 
   final dir = await getApplicationDocumentsDirectory();
 

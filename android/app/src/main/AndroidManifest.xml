@@ -42,4 +42,9 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+    <!-- Дозвіл на сповіщення (Android 13+) -->
+    2 <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    3 <!-- Дозвіл на точні будильники (Android 14+) -->
+    4 <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    5 <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 </manifest>
