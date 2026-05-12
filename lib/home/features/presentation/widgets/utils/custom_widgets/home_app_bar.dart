@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:goalstack/home/features/presentation/providers/user_profile_provider.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
-class HomeAppBar extends StatelessWidget {
+class HomeAppBar extends ConsumerWidget {
   const HomeAppBar({super.key});
 
   String _getGreeting() {
@@ -16,14 +20,15 @@ class HomeAppBar extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userProfile = ref.watch(userProfileProvider);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Текст зліва (Вітання + Дата)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -39,7 +44,7 @@ class HomeAppBar extends StatelessWidget {
               Text(
                 _getFormattedDate(),
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withOpacity(0.8),
                   fontSize: 18,
                 ),
               ),
@@ -49,21 +54,35 @@ class HomeAppBar extends StatelessWidget {
           // Кнопка налаштувань справа
           Container(
             margin: const EdgeInsets.only(
-              top: 10.0,    // Рухає кнопку ВНИЗ
-              right: 0.0,  // Відсуває від правого КРАЮ
-              left: 0.0,   // Відсуває ВІД ТЕКСТУ зліва
-              bottom: 0.0,  // Можна підняти ВГОРУ (якщо треба)
+              top: 10.0,
+              right: 0.0,
+              left: 0.0,
+              bottom: 0.0,
             ),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
-            child: IconButton(
-              icon: const Icon(Icons.settings_outlined, color: Colors.white),
-              onPressed: () {
-                // TODO: Додати перехід на екран налаштувань
-                print("Settings tapped");
+            // Використовуємо ClipRRect або CircleAvatar для відображення фото
+            child: InkWell(
+              onTap: () {
+                context.push('/settings');
               },
+              customBorder: const CircleBorder(),
+              child: userProfile.imagePath != null
+                  ? CircleAvatar(
+                radius: 28, // Розмір, що відповідає твоєму IconButton
+                backgroundColor: Colors.transparent,
+                backgroundImage: FileImage(File(userProfile.imagePath!)),
+              )
+                  : const Padding(
+                padding: EdgeInsets.all(8.0), // Зберігаємо візуальний розмір іконки
+                child: Icon(
+                  Icons.settings_outlined,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
             ),
           ),
         ],

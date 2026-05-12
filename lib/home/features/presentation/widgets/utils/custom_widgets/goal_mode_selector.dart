@@ -11,6 +11,7 @@ class GoalModeSelector extends StatelessWidget {
   final ValueChanged<int> onCustomDaysChanged;
   final ValueChanged<int> onCalendarDayToggled;
 
+
   const GoalModeSelector({
     super.key,
     required this.goalType,
@@ -38,13 +39,30 @@ class GoalModeSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Target mode',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            const Text(
+              'Track Mode',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            // Текст-підказка справа
+            Text(
+              'How do you want to track it?',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.8),
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 12),
 
@@ -74,7 +92,7 @@ class GoalModeSelector extends StatelessWidget {
       padding: const EdgeInsets.all(4),
       child: Row(
         children: [
-          _buildTypeOption('All Days', 'all_days'),
+          _buildTypeOption('Week', 'week'),
           _buildTypeOption('Custom', 'custom'),
           _buildTypeOption('Calendar', 'calendar'),
         ],
@@ -91,7 +109,9 @@ class GoalModeSelector extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF122246) : Colors.transparent,
+            color: isSelected ?
+            const Color(0xFF1E3A7A) : Colors.transparent,
+
             borderRadius: BorderRadius.circular(12),
             border: isSelected
                 ? Border.all(color: Colors.white.withOpacity(0.2))

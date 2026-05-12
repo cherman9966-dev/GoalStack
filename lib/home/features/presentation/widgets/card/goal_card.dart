@@ -5,7 +5,7 @@ import 'package:goalstack/home/features/domain/entities/goal_entity.dart';
 import 'package:goalstack/home/features/presentation/widgets/card/logic/dynamic_motivator.dart';
 import 'package:goalstack/home/features/presentation/widgets/card/logic/goal_fire_row.dart';
 import 'package:goalstack/home/features/presentation/widgets/card/logic/streak_calculator.dart';
-import 'package:goalstack/home/features/presentation/widgets/dialogs/streak_congrats_dialog.dart';
+import 'package:goalstack/home/features/presentation/widgets/popup_dialogs/streak_congrats_dialog.dart';
 
 class GoalCard extends StatefulWidget {
   final GoalEntity goal;
@@ -60,7 +60,7 @@ class _GoalCardState extends State<GoalCard> {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.symmetric(horizontal: 24),
         decoration: BoxDecoration(
-          color: Colors.redAccent,
+          color: Colors.white54,
           borderRadius: BorderRadius.circular(24),
         ),
         alignment: Alignment.centerRight,
@@ -98,7 +98,7 @@ class _GoalCardState extends State<GoalCard> {
                   onPressed: () => Navigator.of(context).pop(true),
                   child: const Text(
                     'Delete',
-                    style: TextStyle(color: Colors.redAccent),
+                    style: TextStyle(color: Colors.orange),
                   ),
                 ),
               ],
@@ -139,7 +139,7 @@ class _GoalCardState extends State<GoalCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(widget.goal.icon, color: widget.goal.color, size: 32),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 14),
 
                   // Назва цілі
                   Expanded(
@@ -153,7 +153,7 @@ class _GoalCardState extends State<GoalCard> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 8),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -161,11 +161,11 @@ class _GoalCardState extends State<GoalCard> {
                       Text(
                         '$liveStreak days streak!',
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
-                          fontSize: 14,
+                          color: Colors.white.withOpacity(0.8),
+                          fontSize: 15,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 1.0),
 
                       DynamicMotivator(
                         activeFires: _weekDaysStatus
@@ -176,7 +176,33 @@ class _GoalCardState extends State<GoalCard> {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+
+              // --- ДОДАНИЙ БЛОК: Description ---
+              if (widget.goal.description != null && widget.goal.description!.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 0.0,
+                    bottom: 14.0,
+                    left: 48.0,
+                  ),
+                  child: FractionallySizedBox(
+                    widthFactor: 0.85,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      widget.goal.description!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.8),
+                        fontSize: 15,
+                        height: 1.0,
+                      ),
+                    ),
+                  ),
+                )
+              else
+                const SizedBox(height: 24),
+              // --- КІНЕЦЬ БЛОКУ ---
 
               // 2. НИЖНІЙ РЯДОК: Вогники
               GoalFiresRow(
@@ -190,10 +216,10 @@ class _GoalCardState extends State<GoalCard> {
 
                   // 2. Готуємо оновлену ціль
                   final updatedGoal = widget.goal;
-                  updatedGoal.weekDaysStatus = List.from(_weekDaysStatus); // Створюємо копію масиву
+                  updatedGoal.weekDaysStatus = List.from(_weekDaysStatus);
 
                   // --- ДОДАЄМО ЛОГІКУ КАЛЕНДАРЯ ---
-                  final today = DateTime.now().dateOnly; // Наш новий Extension
+                  final today = DateTime.now().dateOnly;
 
                   // Створюємо новий список дат, щоб Isar побачив зміни
                   final updatedDates = List<DateTime>.from(updatedGoal.completedDates);

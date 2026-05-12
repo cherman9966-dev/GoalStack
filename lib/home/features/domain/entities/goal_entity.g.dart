@@ -77,13 +77,23 @@ const GoalEntitySchema = CollectionSchema(
       name: r'streak',
       type: IsarType.long,
     ),
-    r'title': PropertySchema(
+    r'streakEarnedDates': PropertySchema(
       id: 12,
+      name: r'streakEarnedDates',
+      type: IsarType.dateTimeList,
+    ),
+    r'title': PropertySchema(
+      id: 13,
       name: r'title',
       type: IsarType.string,
     ),
+    r'totalFiresInsideGoal': PropertySchema(
+      id: 14,
+      name: r'totalFiresInsideGoal',
+      type: IsarType.long,
+    ),
     r'weekDaysStatus': PropertySchema(
-      id: 13,
+      id: 15,
       name: r'weekDaysStatus',
       type: IsarType.boolList,
     )
@@ -118,6 +128,7 @@ int _goalEntityEstimateSize(
   }
   bytesCount += 3 + object.goalType.length * 3;
   bytesCount += 3 + object.status.length * 3;
+  bytesCount += 3 + object.streakEarnedDates.length * 8;
   bytesCount += 3 + object.title.length * 3;
   bytesCount += 3 + object.weekDaysStatus.length;
   return bytesCount;
@@ -141,8 +152,10 @@ void _goalEntitySerialize(
   writer.writeDateTime(offsets[9], object.scheduledTime);
   writer.writeString(offsets[10], object.status);
   writer.writeLong(offsets[11], object.streak);
-  writer.writeString(offsets[12], object.title);
-  writer.writeBoolList(offsets[13], object.weekDaysStatus);
+  writer.writeDateTimeList(offsets[12], object.streakEarnedDates);
+  writer.writeString(offsets[13], object.title);
+  writer.writeLong(offsets[14], object.totalFiresInsideGoal);
+  writer.writeBoolList(offsets[15], object.weekDaysStatus);
 }
 
 GoalEntity _goalEntityDeserialize(
@@ -165,8 +178,10 @@ GoalEntity _goalEntityDeserialize(
   object.scheduledTime = reader.readDateTimeOrNull(offsets[9]);
   object.status = reader.readString(offsets[10]);
   object.streak = reader.readLong(offsets[11]);
-  object.title = reader.readString(offsets[12]);
-  object.weekDaysStatus = reader.readBoolList(offsets[13]) ?? [];
+  object.streakEarnedDates = reader.readDateTimeList(offsets[12]) ?? [];
+  object.title = reader.readString(offsets[13]);
+  object.totalFiresInsideGoal = reader.readLong(offsets[14]);
+  object.weekDaysStatus = reader.readBoolList(offsets[15]) ?? [];
   return object;
 }
 
@@ -202,8 +217,12 @@ P _goalEntityDeserializeProp<P>(
     case 11:
       return (reader.readLong(offset)) as P;
     case 12:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTimeList(offset) ?? []) as P;
     case 13:
+      return (reader.readString(offset)) as P;
+    case 14:
+      return (reader.readLong(offset)) as P;
+    case 15:
       return (reader.readBoolList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1411,6 +1430,151 @@ extension GoalEntityQueryFilter
     });
   }
 
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      streakEarnedDatesElementEqualTo(DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'streakEarnedDates',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      streakEarnedDatesElementGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'streakEarnedDates',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      streakEarnedDatesElementLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'streakEarnedDates',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      streakEarnedDatesElementBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'streakEarnedDates',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      streakEarnedDatesLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'streakEarnedDates',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      streakEarnedDatesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'streakEarnedDates',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      streakEarnedDatesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'streakEarnedDates',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      streakEarnedDatesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'streakEarnedDates',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      streakEarnedDatesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'streakEarnedDates',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      streakEarnedDatesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'streakEarnedDates',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition> titleEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1538,6 +1702,62 @@ extension GoalEntityQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'title',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      totalFiresInsideGoalEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'totalFiresInsideGoal',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      totalFiresInsideGoalGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'totalFiresInsideGoal',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      totalFiresInsideGoalLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'totalFiresInsideGoal',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
+      totalFiresInsideGoalBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'totalFiresInsideGoal',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -1782,6 +2002,20 @@ extension GoalEntityQuerySortBy
       return query.addSortBy(r'title', Sort.desc);
     });
   }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy>
+      sortByTotalFiresInsideGoal() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalFiresInsideGoal', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy>
+      sortByTotalFiresInsideGoalDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalFiresInsideGoal', Sort.desc);
+    });
+  }
 }
 
 extension GoalEntityQuerySortThenBy
@@ -1930,6 +2164,20 @@ extension GoalEntityQuerySortThenBy
       return query.addSortBy(r'title', Sort.desc);
     });
   }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy>
+      thenByTotalFiresInsideGoal() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalFiresInsideGoal', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy>
+      thenByTotalFiresInsideGoalDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'totalFiresInsideGoal', Sort.desc);
+    });
+  }
 }
 
 extension GoalEntityQueryWhereDistinct
@@ -2010,10 +2258,24 @@ extension GoalEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<GoalEntity, GoalEntity, QDistinct>
+      distinctByStreakEarnedDates() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'streakEarnedDates');
+    });
+  }
+
   QueryBuilder<GoalEntity, GoalEntity, QDistinct> distinctByTitle(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'title', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QDistinct>
+      distinctByTotalFiresInsideGoal() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'totalFiresInsideGoal');
     });
   }
 
@@ -2107,9 +2369,23 @@ extension GoalEntityQueryProperty
     });
   }
 
+  QueryBuilder<GoalEntity, List<DateTime>, QQueryOperations>
+      streakEarnedDatesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'streakEarnedDates');
+    });
+  }
+
   QueryBuilder<GoalEntity, String, QQueryOperations> titleProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'title');
+    });
+  }
+
+  QueryBuilder<GoalEntity, int, QQueryOperations>
+      totalFiresInsideGoalProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'totalFiresInsideGoal');
     });
   }
 

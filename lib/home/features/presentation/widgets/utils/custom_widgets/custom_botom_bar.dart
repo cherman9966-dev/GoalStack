@@ -27,7 +27,7 @@ class CustomBottomBar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
 
               decoration: BoxDecoration(
-                color: const Color(0xFF1E293B).withOpacity(0.4),
+                color: const Color(0xFF1E293B).withOpacity(0.6),
                 borderRadius: BorderRadius.circular(40),
                 border: Border.all(
                   color: Colors.white.withOpacity(0.2),
@@ -119,9 +119,9 @@ class CustomBottomBar extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    const Color(0xFF1E3A7A).withOpacity(0.5),
+                    const Color(0xFF1E3A7A).withOpacity(0.8),
                     // Світліший синій
-                    const Color(0xFF122246).withOpacity(0.4),
+                    const Color(0xFF122246).withOpacity(0.8),
                     // Основний колір, але м'якший
                   ],
                 )
@@ -136,7 +136,7 @@ class CustomBottomBar extends StatelessWidget {
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: const Color(0xFF1E3A7A).withOpacity(0.4),
+                    color: const Color(0xFF1E3A7A).withOpacity(0.8),
                     blurRadius: 10,
                     spreadRadius: 1,
                   ),

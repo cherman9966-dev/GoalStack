@@ -17,7 +17,7 @@ class AddGoalPage extends ConsumerStatefulWidget {
 
 class _AddGoalPageState extends ConsumerState<AddGoalPage> {
 
-  String _goalType = 'all_days';
+  String _goalType = 'week';
   int _customDaysCount = 3; // Для режиму Custom
   List<bool> _calendarSelectedDays = List.filled(7, false);
 
@@ -202,8 +202,8 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    const Color(0xFF122246).withOpacity(0.25),
-                    const Color(0xFF091428).withOpacity(0.45),
+                    const Color(0xFF1E3A7A).withOpacity(0.25),
+                    const Color(0xFF122246).withOpacity(0.45),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(32),
@@ -219,14 +219,14 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 1. MAIN TOPIC
-                  _buildLabel('Main topic'),
+                  _buildLabel('Topic name'),
                   _buildTextField(
                     hint: 'Enter main topic',
                     controller: _titleController,
                   ),
                   const SizedBox(height: 16),
 
-                  // Вставляємо замість старого LayoutBuilder
+                  // GoalModeSelector
                   if (!isEditMode)
                   GoalModeSelector(
                     goalType: _goalType,
@@ -254,7 +254,7 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
                   _buildTextField(
                     hint: 'Enter detailed description of the goal',
                     controller: _descriptionController,
-                    maxLines: 3,
+                    maxLines: 1,
                   ),
                   const SizedBox(height: 15),
 

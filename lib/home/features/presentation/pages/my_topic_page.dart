@@ -51,7 +51,7 @@ class _MyTopicPageState extends ConsumerState<MyTopicPage> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: const Text('Goal deleted successfully'),
-                    backgroundColor: Colors.redAccent,
+                    backgroundColor: Colors.white54,
                     behavior: SnackBarBehavior.floating,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),

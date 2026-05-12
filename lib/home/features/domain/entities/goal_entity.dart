@@ -16,12 +16,14 @@ class GoalEntity {
 
   List<DateTime> completedDates = [];
 
+
   List<bool> weekDaysStatus = [false, false, false, false, false, false, false];
 
   List<DateTime> streakEarnedDates = [];
 
   int? iconCodePoint;
   int? colorValue;
+  int totalFiresInsideGoal = 0;
 
   @ignore
   IconData? get icon => iconCodePoint != null

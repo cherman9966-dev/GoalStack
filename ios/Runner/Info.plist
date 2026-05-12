@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>Нам потрібен доступ до галереї, щоб ви могли змінити фото профілю.</string>
+<key>NSCameraUsageDescription</key>
+<string>Нам потрібен доступ до камери, щоб ви могли зробити фото для профілю.</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>Нам потрібен доступ до мікрофона (якщо ви знімаєте відео).</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

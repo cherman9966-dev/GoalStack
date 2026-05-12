@@ -28,6 +28,33 @@ class GoalList extends _$GoalList {
 
   Future<void> updateGoal(GoalEntity updatedGoal) async {
     final DateTime today = DateTime.now().dateOnly;
+
+    // =========================================================================
+    // 1. ЛОГІКА ЗАГАЛЬНОГО РАХУНКУ ВОГНИКІВ (НЕЗАЛЕЖНО ВІД ДАТИ)
+    // =========================================================================
+    // Читаємо стару версію цілі з бази, щоб побачити точну різницю кліків
+    final oldGoal = await isar.goalEntitys.get(updatedGoal.id);
+
+    // Рахуємо скільки вогників (true) було раніше і скільки стало зараз
+    final int oldFiresCount = oldGoal?.weekDaysStatus.where((status) => status).length ?? 0;
+    final int newFiresCount = updatedGoal.weekDaysStatus.where((status) => status).length;
+
+    if (newFiresCount > oldFiresCount) {
+      // Якщо ти натиснув новий вогник (навіть кілька в один день),
+      // додаємо цю різницю до нашого незалежного лічильника
+      updatedGoal.totalFiresInsideGoal += (newFiresCount - oldFiresCount);
+    } else if (newFiresCount < oldFiresCount) {
+      // Якщо ти "віджав" вогник назад, віднімаємо, щоб статистика була чесною
+      updatedGoal.totalFiresInsideGoal -= (oldFiresCount - newFiresCount);
+      // Захист від від'ємних чисел
+      if (updatedGoal.totalFiresInsideGoal < 0) {
+        updatedGoal.totalFiresInsideGoal = 0;
+      }
+    }
+
+    // =========================================================================
+    // 2. СТАРА ЛОГІКА ДАТ ДЛЯ САМОЇ КАРТКИ ЦІЛІ (БЕЗ ЗМІН)
+    // =========================================================================
     final bool hasAnySuccessToday = updatedGoal.weekDaysStatus.contains(true);
 
     if (hasAnySuccessToday) {
@@ -41,6 +68,8 @@ class GoalList extends _$GoalList {
           date.day == today.day
       );
     }
+
+    // Зберігаємо оновлену ціль у базу
     await isar.writeTxn(() async {
       await isar.goalEntitys.put(updatedGoal);
     });

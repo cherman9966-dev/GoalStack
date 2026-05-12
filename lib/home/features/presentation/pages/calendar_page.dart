@@ -81,7 +81,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
                       titleCentered: true,
                       titleTextStyle: const TextStyle(
                           color: Colors.black,
-                          fontSize: 18,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold),
                       leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.black),
                       rightChevronIcon: const Icon(Icons.chevron_right, color: Colors.black),
@@ -167,29 +167,49 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
   }
 
   Widget _buildTimeline(List<GoalEntity> goals) {
-    final selectedDate = _selectedDay?.dateOnly;
+    // Безпечна перевірка: якщо день не вибрано, список порожній
+    if (_selectedDay == null) return const SizedBox.shrink();
+
+    final selectedDate = _selectedDay!.dateOnly;
     final now = DateTime.now().dateOnly;
 
+    // 1. ФІЛЬТРАЦІЯ: Визначаємо, чи взагалі має ціль з'явитися в списку
+    final displayGoals = goals.where((goal) {
+      final bool isCompletedToday = goal.completedDates.contains(selectedDate);
 
-    final displayGoals = goals.where((g) {
-      final bool isCompletedToday = g.completedDates.contains(selectedDate);
-      final bool isMissed = selectedDate != null &&
-          selectedDate.isBefore(now) &&
-          !isCompletedToday;
-      return isCompletedToday || isMissed;
+      // Якщо ціль виконана в цей день — ми 100% маємо її показати (навіть якщо день не за розкладом)
+      if (isCompletedToday) return true;
+
+      // Якщо дата в майбутньому або сьогодні, провал ще не міг настати — не показуємо
+      if (!selectedDate.isBefore(now)) return false;
+
+      // Перевірка дати народження (Лікуємо привидів минулого)
+      final goalCreationDate = DateTime(goal.createdAt.year, goal.createdAt.month, goal.createdAt.day);
+      final currentDateToCompare = DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
+      if (currentDateToCompare.isBefore(goalCreationDate)) return false;
+
+      // Перевірка розкладу (Лікуємо RangeError та перевіряємо чи призначено на цей день)
+      final bool hasValidWeekDays = goal.weekDaysStatus != null && goal.weekDaysStatus.length >= 7;
+      final bool isScheduledForToday = hasValidWeekDays
+          ? goal.weekDaysStatus[selectedDate.weekday - 1]
+          : false;
+
+      // Ціль потрапляє в список ТІЛЬКИ якщо вона була запланована на цей день
+      return isScheduledForToday;
     }).toList();
 
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      itemCount: displayGoals.length,
+      itemCount: displayGoals.length, // ВАЖЛИВО: додано itemCount
       itemBuilder: (context, index) {
         final goal = displayGoals[index];
         final bool isGoalFinished = goal.isCompleted;
         final bool isCompletedToday = goal.completedDates.contains(selectedDate);
-        
-        final bool isFailedStreak = selectedDate != null &&
-            selectedDate.isBefore(now) &&
-            !isCompletedToday;
+
+        // 2. СТАТУС ПРОВАЛУ:
+        // Оскільки ми вже відфільтрували список вище, будь-яка ціль тут,
+        // яка НЕ виконана (isCompletedToday == false), автоматично є проваленою.
+        final bool isFailedStreak = !isCompletedToday;
 
         return Container(
           margin: const EdgeInsets.only(bottom: 15),
@@ -205,18 +225,16 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
             ),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              // НОВЕ: Колір рамки
               color: isFailedStreak
-                  ? Colors.redAccent.withOpacity(0.8) // Червоний для провалу
+                  ? Colors.redAccent.withOpacity(0.8)
                   : (isGoalFinished
-                  ? Colors.orangeAccent.withOpacity(0.8) // Золотий для кубка
-                  : Colors.white.withOpacity(0.18)), // Стандарт
-              width: isFailedStreak ? 2.0 : 1.0, // Товща рамка для провалу
+                  ? Colors.orangeAccent.withOpacity(0.8)
+                  : Colors.white.withOpacity(0.18)),
+              width: isFailedStreak ? 2.0 : 1.0,
             ),
           ),
           child: Row(
             children: [
-              // Іконка
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
