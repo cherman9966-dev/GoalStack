@@ -261,22 +261,41 @@ class _CustomTimePickerPopupState extends State<TimePickerPopup> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
+                OutlinedButton(
                   onPressed: () => Navigator.pop(context), // Повертає null (скасування)
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                   child: Text(
                     'Cancel',
-                    style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 18),
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.8),
+                      fontSize: 18,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
-                TextButton(
+                OutlinedButton(
                   onPressed: () {
                     final formattedTime = '${selectedHour.toString().padLeft(2, '0')}:${selectedMinute.toString().padLeft(2, '0')}';
                     Navigator.pop(context, formattedTime);
                   },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                   child: const Text(
                     'Save',
-                    style: TextStyle(color: Color(0xFF5C85FF), fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Color(0xFF5C85FF),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],

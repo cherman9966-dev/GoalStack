@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:goalstack/core/utils/day_extensions.dart';
 import 'package:goalstack/home/features/domain/entities/goal_entity.dart';
 import 'package:goalstack/home/features/presentation/widgets/card/logic/dynamic_motivator.dart';
 import 'package:goalstack/home/features/presentation/widgets/card/logic/goal_fire_row.dart';
 import 'package:goalstack/home/features/presentation/widgets/card/logic/streak_calculator.dart';
 import 'package:goalstack/home/features/presentation/widgets/popup_dialogs/streak_congrats_dialog.dart';
+import 'package:goalstack/home/features/presentation/widgets/popup_dialogs/streak_fail_dialog.dart';
 
-class GoalCard extends StatefulWidget {
+class GoalCard extends ConsumerStatefulWidget {
   final GoalEntity goal;
   final VoidCallback onDelete;
   final Function(GoalEntity) onUpdate;
@@ -20,23 +21,22 @@ class GoalCard extends StatefulWidget {
   });
 
   @override
-  State<GoalCard> createState() => _GoalCardState();
+  ConsumerState<GoalCard> createState() => _GoalCardState();
 }
 
-class _GoalCardState extends State<GoalCard> {
+class _GoalCardState extends ConsumerState<GoalCard> {
   late List<bool> _weekDaysStatus;
 
   @override
   void initState() {
     super.initState();
-
     _weekDaysStatus = List.from(widget.goal.weekDaysStatus);
   }
 
   @override
   void didUpdateWidget(covariant GoalCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.goal.weekDaysStatus != widget.goal.weekDaysStatus) {
+    if (oldWidget.goal != widget.goal) {
       setState(() {
         _weekDaysStatus = List.from(widget.goal.weekDaysStatus);
       });
@@ -48,14 +48,24 @@ class _GoalCardState extends State<GoalCard> {
     final int activeFires = _weekDaysStatus
         .where((isCompleted) => isCompleted)
         .length;
-    final bool isPerfectWeek = activeFires == 7;
+
     final int liveStreak = StreakCalculator.calculate(_weekDaysStatus);
+
+    int targetCount = 7;
+    if (widget.goal.goalType == 'custom') {
+      targetCount = widget.goal.customTargetDays;
+    } else if (widget.goal.goalType == 'calendar') {
+      targetCount = widget.goal.calendarSelectedDays
+          .where((day) => day == true)
+          .length;
+    }
+    final int totalStreak = (widget.goal.streak * targetCount) + liveStreak;
+
     return Dismissible(
-      key: UniqueKey(),
+      key: ValueKey(widget.goal.id),
       direction: DismissDirection.endToStart,
       dismissThresholds: const {DismissDirection.endToStart: 0.2},
 
-      // Фон, який видно під час свайпу (Червоний з корзиною)
       background: Container(
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -67,41 +77,115 @@ class _GoalCardState extends State<GoalCard> {
         child: const Icon(Icons.delete_outline, color: Colors.white, size: 32),
       ),
 
-      // Вікно ПІДТВЕРДЖЕННЯ видалення
       confirmDismiss: (direction) async {
         return await showDialog(
           context: context,
           builder: (BuildContext context) {
-            return AlertDialog(
-              backgroundColor: const Color(0xFF1A2A4A),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              title: const Text(
-                'Delete Goal?',
-                style: TextStyle(color: Colors.white),
-              ),
-              content: const Text(
-                'Are you sure you want to delete this goal? This action cannot be undone.',
-                style: TextStyle(color: Colors.white70),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  // Скасувати
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.grey),
+            return Dialog(
+              backgroundColor: Colors.transparent,
+              // Робимо фон Dialog прозорим
+              insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+              // Відступи від країв екрану
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  // 1. ТВІЙ ФІРМОВИЙ ГРАДІЄНТ (темний синій преміум)
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      const Color(0xFF1E3A7A).withOpacity(0.95),
+                      const Color(0xFF122246).withOpacity(0.90),
+                    ],
                   ),
+                  borderRadius: BorderRadius.circular(24),
+                  // 2. ТОНКА РАМКА ЯК НА КАРТКАХ
+                  border: Border.all(color: Colors.white.withOpacity(0.2)),
                 ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text(
-                    'Delete',
-                    style: TextStyle(color: Colors.orange),
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min, // Щоб висота була по контенту
+                  children: [
+                    // Іконка для акценту (🗑️)
+                    const Text('🗑️', style: TextStyle(fontSize: 40)),
+                    const SizedBox(height: 16),
+
+                    const Text(
+                      'Delete Goal?',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    Text(
+                      'Are you sure you want to delete this goal? This action cannot be undone.',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.7),
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    Row(
+                      children: [
+                        // Кнопка Cancel
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.8),
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(width: 12),
+
+                        // Кнопка Delete (Акцентна, червона, небезпечна дія)
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.redAccent.withOpacity(
+                                0.8,
+                              ),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                            child: const Text(
+                              'Delete Goal',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
+              ),
             );
           },
         );
@@ -134,14 +218,12 @@ class _GoalCardState extends State<GoalCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. ВЕРХНІЙ РЯДОК
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(widget.goal.icon, color: widget.goal.color, size: 32),
                   const SizedBox(width: 14),
 
-                  // Назва цілі
                   Expanded(
                     child: Text(
                       widget.goal.title,
@@ -157,9 +239,8 @@ class _GoalCardState extends State<GoalCard> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      // Текст Streak
                       Text(
-                        '$liveStreak days streak!',
+                        '$totalStreak days streak!',
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.8),
                           fontSize: 15,
@@ -168,8 +249,7 @@ class _GoalCardState extends State<GoalCard> {
                       const SizedBox(height: 1.0),
 
                       DynamicMotivator(
-                        activeFires: _weekDaysStatus
-                            .where((status) => status == true).length,
+                        activeFires: activeFires,
                         totalFires: _weekDaysStatus.length,
                       ),
                     ],
@@ -177,8 +257,8 @@ class _GoalCardState extends State<GoalCard> {
                 ],
               ),
 
-              // --- ДОДАНИЙ БЛОК: Description ---
-              if (widget.goal.description != null && widget.goal.description!.isNotEmpty)
+              if (widget.goal.description != null &&
+                  widget.goal.description!.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(
                     top: 0.0,
@@ -202,46 +282,24 @@ class _GoalCardState extends State<GoalCard> {
                 )
               else
                 const SizedBox(height: 24),
-              // --- КІНЕЦЬ БЛОКУ ---
 
-              // 2. НИЖНІЙ РЯДОК: Вогники
               GoalFiresRow(
                 goal: widget.goal,
                 weekDaysStatus: _weekDaysStatus,
                 onFireTapped: (index) async {
-                  // 1. Оновлюємо локальний UI
                   setState(() {
                     _weekDaysStatus[index] = !_weekDaysStatus[index];
                   });
 
-                  // 2. Готуємо оновлену ціль
                   final updatedGoal = widget.goal;
                   updatedGoal.weekDaysStatus = List.from(_weekDaysStatus);
-
-                  // --- ДОДАЄМО ЛОГІКУ КАЛЕНДАРЯ ---
-                  final today = DateTime.now().dateOnly;
-
-                  // Створюємо новий список дат, щоб Isar побачив зміни
-                  final updatedDates = List<DateTime>.from(updatedGoal.completedDates);
-
-                  // Якщо хоча б один вогник горить — додаємо дату, якщо всі згасли — прибираємо
-                  if (_weekDaysStatus.contains(true)) {
-                    if (!updatedDates.contains(today)) {
-                      updatedDates.add(today);
-                    }
-                  } else {
-                    updatedDates.remove(today);
-                  }
-
-                  updatedGoal.completedDates = updatedDates;
-
-                  // 3. Відправляємо оновлену ціль у провайдер
                   widget.onUpdate(updatedGoal);
 
-                  // 4. Перевірка на завершення Streak
-                  final isAllDaysCompleted = _weekDaysStatus.every(
-                        (status) => status == true,
+                  final bool isAllDaysCompleted = _weekDaysStatus.every(
+                    (status) => status == true,
                   );
+                  final bool isLastFire = index == _weekDaysStatus.length - 1;
+                  final bool isToggledOn = _weekDaysStatus[index] == true;
 
                   if (isAllDaysCompleted) {
                     showDialog(
@@ -251,77 +309,22 @@ class _GoalCardState extends State<GoalCard> {
                         return StreakCongratsDialog(goalId: widget.goal.id);
                       },
                     );
+                  } else if (isLastFire && isToggledOn) {
+                    // Якщо натиснуто останній вогник, але не всі виконані
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withOpacity(0.6),
+                      builder: (context) {
+                        return GoalFailPopup(
+                          goalId: widget.goal.id,
+                          completedDays: activeFires,
+                          targetDays: _weekDaysStatus.length,
+                        );
+                      },
+                    );
                   }
                 },
               ),
-
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: List.generate(7, (index) {
-              //     final bool isCompleted = index < _weekDaysStatus.length
-              //         ? _weekDaysStatus[index]
-              //         : false;
-              //     return Column(
-              //       children: [
-              //         Stack(
-              //           alignment: Alignment.center,
-              //           children: [
-              //             // Це твій ВНУТРІШНІЙ GestureDetector (він має пріоритет при натисканні сюди)
-              //             GestureDetector(
-              //               onTap: () async{
-              //                 setState(() {
-              //                   _weekDaysStatus[index] = !_weekDaysStatus[index];
-              //                 });
-              //                 final updatedGoal = widget.goal
-              //                   ..weekDaysStatus = _weekDaysStatus;
-              //                 widget.onUpdate(updatedGoal);
-              //                 final isAllDaysCompleted = _weekDaysStatus.every((status) => status == true);
-              //                 if (isAllDaysCompleted) {
-              //                   showDialog(
-              //                     context: context,
-              //                     barrierColor: Colors.black.withOpacity(0.6),
-              //                     builder: (context) {
-              //                       return StreakCongratsDialog(goalId: widget.goal.id);
-              //                     },
-              //                   );
-              //                 }
-              //               },
-              //               child: Container(
-              //                 width: 43,
-              //                 height: 43,
-              //                 decoration: const BoxDecoration(
-              //                     color: Colors.white,
-              //                     shape: BoxShape.circle
-              //                 ),
-              //                 child: Center(
-              //                   child: Image.asset(
-              //                     isCompleted
-              //                         ? 'assets/icons/fire_flame.png'
-              //                         : 'assets/icons/grey_fire.png',
-              //                     width: 34,
-              //                     height: 34,
-              //                     fit: BoxFit.contain,
-              //                   ),
-              //                 ),
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //
-              //         const SizedBox(height: 8),
-              //         // Назва дня
-              //         Text(
-              //           _dayNames[index],
-              //           style: TextStyle(
-              //             color: Colors.white.withOpacity(0.5),
-              //             fontSize: 11,
-              //             fontWeight: FontWeight.w600,
-              //           ),
-              //         ),
-              //       ],
-              //     );
-              //   }),
-              // ),
             ],
           ),
         ),

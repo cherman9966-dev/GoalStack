@@ -8,37 +8,14 @@ class CompletionRateCircle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 60,
-      height: 60,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Заднє тло (сіре кільце)
-          CircularProgressIndicator(
-            value: 1.0,
-            strokeWidth: 6,
-            color: Colors.white.withOpacity(0.1),
-          ),
-          // Заповнений прогрес (синє кільце)
-          CircularProgressIndicator(
-            value: percentage,
-            strokeWidth: 6,
-            backgroundColor: Colors.transparent,
-            color: const Color(0xFF5C85FF), // Твій акцентний колір
-            strokeCap: StrokeCap.round, // Заокруглені кінці
-          ),
-          // Текст всередині
-          Center(
-            child: Text(
-              '${(percentage * 100).toInt()}%',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
+      width: 24,
+      height: 24,
+      child: CircularProgressIndicator(
+        value: percentage.clamp(0.0, 1.0),
+        strokeWidth: 4.0, // Оптимальна товщина для невеликого розміру
+        backgroundColor: const Color(0xFF2A3B61),
+        color: const Color(0xFF52B774),
+        strokeCap: StrokeCap.round,
       ),
     );
   }

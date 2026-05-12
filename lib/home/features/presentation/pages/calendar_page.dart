@@ -177,8 +177,11 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     final displayGoals = goals.where((goal) {
       final bool isCompletedToday = goal.completedDates.contains(selectedDate);
 
-      // Якщо ціль виконана в цей день — ми 100% маємо її показати (навіть якщо день не за розкладом)
+      // Якщо ціль виконана в цей день — ми показуємо її завжди (історію не видаляємо)
       if (isCompletedToday) return true;
+
+      // Якщо ціль видалена і НЕ була виконана в цей день — ховаємо її
+      if (goal.isDeleted) return false;
 
       // Якщо дата в майбутньому або сьогодні, провал ще не міг настати — не показуємо
       if (!selectedDate.isBefore(now)) return false;
@@ -193,8 +196,6 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
       final bool isScheduledForToday = hasValidWeekDays
           ? goal.weekDaysStatus[selectedDate.weekday - 1]
           : false;
-
-      // Ціль потрапляє в список ТІЛЬКИ якщо вона була запланована на цей день
       return isScheduledForToday;
     }).toList();
 
@@ -205,10 +206,6 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
         final goal = displayGoals[index];
         final bool isGoalFinished = goal.isCompleted;
         final bool isCompletedToday = goal.completedDates.contains(selectedDate);
-
-        // 2. СТАТУС ПРОВАЛУ:
-        // Оскільки ми вже відфільтрували список вище, будь-яка ціль тут,
-        // яка НЕ виконана (isCompletedToday == false), автоматично є проваленою.
         final bool isFailedStreak = !isCompletedToday;
 
         return Container(

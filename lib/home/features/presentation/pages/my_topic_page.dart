@@ -5,6 +5,8 @@ import 'package:goalstack/settings/main_layout.dart';
 import 'empty_topic_screen.dart';
 import '../widgets/card/goal_card.dart';
 
+import 'package:goalstack/home/features/presentation/widgets/popup_dialogs/streak_fail_dialog.dart';
+
 class MyTopicPage extends ConsumerStatefulWidget {
   const MyTopicPage({super.key});
 
@@ -13,13 +15,48 @@ class MyTopicPage extends ConsumerStatefulWidget {
 }
 
 class _MyTopicPageState extends ConsumerState<MyTopicPage> {
+  
+  @override
+  void initState() {
+    super.initState();
+    // Перевірка на провалені цілі після того, як кадр буде побудовано
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkFailedGoals();
+    });
+  }
+
+  void _checkFailedGoals() {
+    final allGoals = ref.read(goalListProvider);
+    final now = DateTime.now();
+
+    for (final goal in allGoals) {
+      if (goal.isDeleted || goal.isCompleted) continue;
+
+      // Логіка: якщо пройшло 7 днів (для тижневої) або N днів (для кастомної)
+      // І стрік не заповнений повністю
+      int targetDays = goal.weekDaysStatus.length;
+      final daysPassed = now.difference(goal.createdAt).inDays;
+
+      if (daysPassed >= targetDays && goal.weekDaysStatus.contains(false)) {
+        // Показуємо попап провалу
+        showDialog(
+          context: context,
+          barrierColor: Colors.black.withOpacity(0.6),
+          builder: (context) => GoalFailPopup(
+            goalId: goal.id,
+            completedDays: goal.weekDaysStatus.where((s) => s).length,
+            targetDays: targetDays,
+          ),
+        );
+        break; // Показуємо тільки один попап за раз
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final goals = ref.watch(goalListProvider);
-
-    Future.microtask(() {
-      ref.read(hasGoalsProvider.notifier).state = goals.isNotEmpty;
-    });
+    final allGoals = ref.watch(goalListProvider);
+    final goals = allGoals.where((g) => !g.isDeleted).toList();
 
     if (goals.isEmpty) {
       return const EmptyTopicScreen();

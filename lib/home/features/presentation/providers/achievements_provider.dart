@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:goalstack/home/features/domain/entities/goal_entity.dart'; // Перевір шлях
 import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
+import 'package:goalstack/home/features/presentation/widgets/card/logic/streak_calculator.dart';
 
 class AchievementsStats {
   final int trophiesCount;
@@ -16,49 +17,54 @@ class AchievementsStats {
   });
 }
 final achievementsStatsProvider = FutureProvider<AchievementsStats>((ref) async {
-  // 1. Просто "слухаємо" стан списку цілей.
-  // Коли список у GoalList зміниться, аналітика оновиться АВТОМАТИЧНО.
   final List<GoalEntity> allGoals = ref.watch(goalListProvider);
-
-
-
-  // =========================================================
-  // Твоя логіка підрахунку (використовуємо 'allGoals')
-  // =========================================================
-
-  // 🔥 ВСЬОГО ВОГНИКІВ
   int totalFires = 0;
   for (var goal in allGoals) {
     totalFires += goal.totalFiresInsideGoal;
   }
 
-  // 🏆 КУБКИ (Perfect Goals)
   int trophies = 0;
   for (var goal in allGoals) {
-    if (goal.isCompleted) {
-      // Визначаємо ціль (наприклад, 21 день або custom)
-      int target = goal.goalType == 'custom_amount' ? goal.customTargetDays : 21;
-      if (goal.streak >= target) trophies++;
-    }
+    trophies += goal.streak;
   }
 
   // ⚡ BEST STREAK
   int bestStreak = 0;
-  if (allGoals.isNotEmpty) {
-    bestStreak = allGoals.map((g) => g.streak).reduce((a, b) => a > b ? a : b);
+  for (var goal in allGoals) {
+    int targetCount = 7;
+    if (goal.goalType == 'custom') {
+      targetCount = goal.customTargetDays;
+    } else if (goal.goalType == 'calendar') {
+      targetCount = goal.calendarSelectedDays.where((day) => day == true).length;
+    }
+    // Якщо ціль завершена, її поточні вогники вже враховані в streak, тому liveStreak = 0
+    int liveStreak = goal.isCompleted ? 0 : StreakCalculator.calculate(goal.weekDaysStatus);
+    // Загальний стрік = (кількість завершених циклів * дні в циклі) + поточні дні
+    int totalStreak = (goal.streak * targetCount) + liveStreak;
+
+    if (totalStreak > bestStreak) {
+      bestStreak = totalStreak;
+    }
   }
 
-  // 📊 PROGRESS (Кругова шкала)
+  // 📊 PROGRESS (Кругова шкала) - Середній прогрес по всіх активних цілях
   double completionRate = 0.0;
-  final activeGoals = allGoals.where((g) => !g.isCompleted).toList();
+  final activeGoals = allGoals.where((g) => !g.isCompleted && !g.isDeleted).toList();
+  
   if (activeGoals.isNotEmpty) {
-    final today = DateTime.now();
-    int finishedToday = activeGoals.where((goal) =>
-        goal.completedDates.any((d) =>
-        d.year == today.year && d.month == today.month && d.day == today.day
-        )
-    ).length;
-    completionRate = finishedToday / activeGoals.length;
+    double totalProgressSum = 0.0;
+    for (var goal in activeGoals) {
+      // Кількість запалених вогників у поточному циклі
+      int litFires = goal.weekDaysStatus.where((status) => status == true).length;
+      // Загальна кількість вогників у циклі
+      int totalFiresInCycle = goal.weekDaysStatus.length;
+      
+      if (totalFiresInCycle > 0) {
+        totalProgressSum += (litFires / totalFiresInCycle);
+      }
+    }
+    // Середнє значення прогресу (від 0.0 до 1.0)
+    completionRate = totalProgressSum / activeGoals.length;
   }
 
   return AchievementsStats(

@@ -190,97 +190,109 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10.0,
-              vertical: 14.0,
-            ),
-            child: Container(
-              padding: const EdgeInsets.all(23.0),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    const Color(0xFF1E3A7A).withOpacity(0.25),
-                    const Color(0xFF122246).withOpacity(0.45),
-                  ],
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10.0,
+                  vertical: 20.0,
                 ),
-                borderRadius: BorderRadius.circular(32),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight - 40, // 40 - сумарний вертикальний padding
                   ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // 1. MAIN TOPIC
-                  _buildLabel('Topic name'),
-                  _buildTextField(
-                    hint: 'Enter main topic',
-                    controller: _titleController,
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.all(23.0),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            const Color(0xFF1E3A7A).withOpacity(0.25),
+                            const Color(0xFF122246).withOpacity(0.45),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(32),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min, // Важливо для центрування
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // 1. MAIN TOPIC
+                          _buildLabel('Topic name'),
+                          _buildTextField(
+                            hint: 'Enter main topic',
+                            controller: _titleController,
+                          ),
+                          const SizedBox(height: 16),
+
+                          // GoalModeSelector
+                          if (!isEditMode)
+                          GoalModeSelector(
+                            goalType: _goalType,
+                            customDaysCount: _customDaysCount,
+                            calendarSelectedDays: _calendarSelectedDays,
+                            selectedColor: _selectedColor,
+                            onTypeChanged: (type) {
+                              setState(() => _goalType = type);
+                            },
+                            onCustomDaysChanged: (count) {
+                              setState(() => _customDaysCount = count);
+                            },
+                            onCalendarDayToggled: (index) {
+                              setState(() {
+                                _calendarSelectedDays[index] = !_calendarSelectedDays[index];
+                              });
+                            },
+                          ),
+
+
+                          const SizedBox(height: 20),
+
+                          // 3. DESCRIPTION
+                          _buildLabel('Description'),
+                          _buildTextField(
+                            hint: 'Enter detailed description of the goal',
+                            controller: _descriptionController,
+                            maxLines: 1,
+                          ),
+                          const SizedBox(height: 15),
+
+                          // 4. GOAL COLOR
+                          _buildLabel('Goal color'),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: _colors
+                                .map((color) => _buildColorCircle(color))
+                                .toList(),
+                          ),
+                          const SizedBox(height: 18),
+
+                          // 5. GOAL STATUS
+                          _buildLabel('Goal icon'),
+                          _buildIconSelector(),
+                          const SizedBox(height: 35),
+
+                          // 6. КНОПКА CREATE GOAL
+                          PrimaryGradientButton(
+                            text: isEditMode ? 'Save Changes' : 'Create Topic',
+                            onPressed: _handleSave,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 16),
-
-                  // GoalModeSelector
-                  if (!isEditMode)
-                  GoalModeSelector(
-                    goalType: _goalType,
-                    customDaysCount: _customDaysCount,
-                    calendarSelectedDays: _calendarSelectedDays,
-                    selectedColor: _selectedColor,
-                    onTypeChanged: (type) {
-                      setState(() => _goalType = type);
-                    },
-                    onCustomDaysChanged: (count) {
-                      setState(() => _customDaysCount = count);
-                    },
-                    onCalendarDayToggled: (index) {
-                      setState(() {
-                        _calendarSelectedDays[index] = !_calendarSelectedDays[index];
-                      });
-                    },
-                  ),
-
-
-                  const SizedBox(height: 20),
-
-                  // 3. DESCRIPTION
-                  _buildLabel('Description'),
-                  _buildTextField(
-                    hint: 'Enter detailed description of the goal',
-                    controller: _descriptionController,
-                    maxLines: 1,
-                  ),
-                  const SizedBox(height: 15),
-
-                  // 4. GOAL COLOR
-                  _buildLabel('Goal color'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: _colors
-                        .map((color) => _buildColorCircle(color))
-                        .toList(),
-                  ),
-                  const SizedBox(height: 18),
-
-                  // 5. GOAL STATUS
-                  _buildLabel('Goal icon'),
-                  _buildIconSelector(),
-                  const SizedBox(height: 35),
-
-                  // 6. КНОПКА CREATE GOAL
-                  PrimaryGradientButton(
-                    text: isEditMode ? 'Save Changes' : 'Create Topic',
-                    onPressed: _handleSave,
-                  ),
-                ],
-              ),
-            ),
+                ),
+              );
+            }
           ),
         ),
       ),

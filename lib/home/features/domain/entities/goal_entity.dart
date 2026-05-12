@@ -14,6 +14,8 @@ class GoalEntity {
   late DateTime createdAt;
   late String status;
 
+  bool isDeleted = false;
+
   List<DateTime> completedDates = [];
 
 

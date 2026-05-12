@@ -5,6 +5,7 @@ import 'package:goalstack/home/features/presentation/providers/achievements_prov
 import 'package:goalstack/home/features/presentation/providers/user_profile_provider.dart';
 import 'package:goalstack/home/features/presentation/widgets/utils/setting_page_widgets/account_support_section.dart';
 import 'package:goalstack/home/features/presentation/widgets/utils/setting_page_widgets/achievements_section.dart';
+import 'package:goalstack/home/features/presentation/widgets/utils/setting_page_widgets/data_management_section.dart';
 import 'package:goalstack/home/features/presentation/widgets/utils/setting_page_widgets/notifications_section.dart';
 import 'package:goalstack/home/profile/data/user_profile_entity.dart';
 import 'package:image_picker/image_picker.dart';
@@ -157,6 +158,9 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                 completionRate: stats?.completionRate ?? 0.0,
                 bestStreakDays: stats?.bestStreak ?? 0,
               ),
+              const SizedBox(height: 15),
+
+              const DataManagementSection(),
               const SizedBox(height: 15),
 
               const NotificationsSection(),
@@ -328,9 +332,17 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                TextButton(
+                                OutlinedButton(
                                   onPressed: () => Navigator.pop(context),
-                                  child: Text(
+                                  style: OutlinedButton.styleFrom(
+                                    side: BorderSide(
+                                      color: Colors.white.withOpacity(0.2),
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: const Text(
                                     'Cancel',
                                     style: TextStyle(
                                       color: Colors.white,

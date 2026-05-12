@@ -62,38 +62,43 @@ const GoalEntitySchema = CollectionSchema(
       name: r'isCompleted',
       type: IsarType.bool,
     ),
-    r'scheduledTime': PropertySchema(
+    r'isDeleted': PropertySchema(
       id: 9,
+      name: r'isDeleted',
+      type: IsarType.bool,
+    ),
+    r'scheduledTime': PropertySchema(
+      id: 10,
       name: r'scheduledTime',
       type: IsarType.dateTime,
     ),
     r'status': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'status',
       type: IsarType.string,
     ),
     r'streak': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'streak',
       type: IsarType.long,
     ),
     r'streakEarnedDates': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'streakEarnedDates',
       type: IsarType.dateTimeList,
     ),
     r'title': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'title',
       type: IsarType.string,
     ),
     r'totalFiresInsideGoal': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'totalFiresInsideGoal',
       type: IsarType.long,
     ),
     r'weekDaysStatus': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'weekDaysStatus',
       type: IsarType.boolList,
     )
@@ -149,13 +154,14 @@ void _goalEntitySerialize(
   writer.writeString(offsets[6], object.goalType);
   writer.writeLong(offsets[7], object.iconCodePoint);
   writer.writeBool(offsets[8], object.isCompleted);
-  writer.writeDateTime(offsets[9], object.scheduledTime);
-  writer.writeString(offsets[10], object.status);
-  writer.writeLong(offsets[11], object.streak);
-  writer.writeDateTimeList(offsets[12], object.streakEarnedDates);
-  writer.writeString(offsets[13], object.title);
-  writer.writeLong(offsets[14], object.totalFiresInsideGoal);
-  writer.writeBoolList(offsets[15], object.weekDaysStatus);
+  writer.writeBool(offsets[9], object.isDeleted);
+  writer.writeDateTime(offsets[10], object.scheduledTime);
+  writer.writeString(offsets[11], object.status);
+  writer.writeLong(offsets[12], object.streak);
+  writer.writeDateTimeList(offsets[13], object.streakEarnedDates);
+  writer.writeString(offsets[14], object.title);
+  writer.writeLong(offsets[15], object.totalFiresInsideGoal);
+  writer.writeBoolList(offsets[16], object.weekDaysStatus);
 }
 
 GoalEntity _goalEntityDeserialize(
@@ -175,13 +181,14 @@ GoalEntity _goalEntityDeserialize(
   object.iconCodePoint = reader.readLongOrNull(offsets[7]);
   object.id = id;
   object.isCompleted = reader.readBool(offsets[8]);
-  object.scheduledTime = reader.readDateTimeOrNull(offsets[9]);
-  object.status = reader.readString(offsets[10]);
-  object.streak = reader.readLong(offsets[11]);
-  object.streakEarnedDates = reader.readDateTimeList(offsets[12]) ?? [];
-  object.title = reader.readString(offsets[13]);
-  object.totalFiresInsideGoal = reader.readLong(offsets[14]);
-  object.weekDaysStatus = reader.readBoolList(offsets[15]) ?? [];
+  object.isDeleted = reader.readBool(offsets[9]);
+  object.scheduledTime = reader.readDateTimeOrNull(offsets[10]);
+  object.status = reader.readString(offsets[11]);
+  object.streak = reader.readLong(offsets[12]);
+  object.streakEarnedDates = reader.readDateTimeList(offsets[13]) ?? [];
+  object.title = reader.readString(offsets[14]);
+  object.totalFiresInsideGoal = reader.readLong(offsets[15]);
+  object.weekDaysStatus = reader.readBoolList(offsets[16]) ?? [];
   return object;
 }
 
@@ -211,18 +218,20 @@ P _goalEntityDeserializeProp<P>(
     case 8:
       return (reader.readBool(offset)) as P;
     case 9:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 10:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 11:
-      return (reader.readLong(offset)) as P;
-    case 12:
-      return (reader.readDateTimeList(offset) ?? []) as P;
-    case 13:
       return (reader.readString(offset)) as P;
-    case 14:
+    case 12:
       return (reader.readLong(offset)) as P;
+    case 13:
+      return (reader.readDateTimeList(offset) ?? []) as P;
+    case 14:
+      return (reader.readString(offset)) as P;
     case 15:
+      return (reader.readLong(offset)) as P;
+    case 16:
       return (reader.readBoolList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1172,6 +1181,16 @@ extension GoalEntityQueryFilter
     });
   }
 
+  QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition> isDeletedEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isDeleted',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<GoalEntity, GoalEntity, QAfterFilterCondition>
       scheduledTimeIsNull() {
     return QueryBuilder.apply(this, (query) {
@@ -1955,6 +1974,18 @@ extension GoalEntityQuerySortBy
     });
   }
 
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> sortByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> sortByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
   QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> sortByScheduledTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'scheduledTime', Sort.asc);
@@ -2117,6 +2148,18 @@ extension GoalEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> thenByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> thenByIsDeletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDeleted', Sort.desc);
+    });
+  }
+
   QueryBuilder<GoalEntity, GoalEntity, QAfterSortBy> thenByScheduledTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'scheduledTime', Sort.asc);
@@ -2239,6 +2282,12 @@ extension GoalEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<GoalEntity, GoalEntity, QDistinct> distinctByIsDeleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isDeleted');
+    });
+  }
+
   QueryBuilder<GoalEntity, GoalEntity, QDistinct> distinctByScheduledTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'scheduledTime');
@@ -2347,6 +2396,12 @@ extension GoalEntityQueryProperty
   QueryBuilder<GoalEntity, bool, QQueryOperations> isCompletedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isCompleted');
+    });
+  }
+
+  QueryBuilder<GoalEntity, bool, QQueryOperations> isDeletedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isDeleted');
     });
   }
 

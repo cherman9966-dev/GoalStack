@@ -6,7 +6,22 @@ part of 'goal_list_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goalListHash() => r'3886fca74ba28ea6c83e28f97cfebfaa18c60d4c';
+String _$hasActiveGoalsHash() => r'e29d59dbb606aa2f22062ea16b53c1c000c901c5';
+
+/// See also [hasActiveGoals].
+@ProviderFor(hasActiveGoals)
+final hasActiveGoalsProvider = AutoDisposeProvider<bool>.internal(
+  hasActiveGoals,
+  name: r'hasActiveGoalsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$hasActiveGoalsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef HasActiveGoalsRef = AutoDisposeProviderRef<bool>;
+String _$goalListHash() => r'1a4fc6cc779e6a5db903490e77fa843976330468';
 
 /// See also [GoalList].
 @ProviderFor(GoalList)

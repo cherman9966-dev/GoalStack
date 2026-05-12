@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
 import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/custom_botom_bar.dart';
 import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/home_app_bar.dart';
-
-final hasGoalsProvider = StateProvider<bool>((ref) => false);
 
 class MainLayout extends ConsumerWidget {
   final Widget child;
@@ -20,7 +19,7 @@ class MainLayout extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasGoals = ref.watch(hasGoalsProvider);
+    final hasGoals = ref.watch(hasActiveGoalsProvider);
 
     // 1. Визначаємо, чи ми зараз на сторінці налаштувань
     final String location = GoRouterState.of(context).uri.path;

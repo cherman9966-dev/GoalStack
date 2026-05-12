@@ -176,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ],
                               ),
-                              backgroundColor: const Color(0xFFFF6B00),
+                              backgroundColor: Colors.white54.withOpacity(0.9),
                               behavior: SnackBarBehavior.floating,
                               margin: const EdgeInsets.only(
                                 bottom: 32,

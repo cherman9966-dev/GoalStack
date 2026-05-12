@@ -41,32 +41,28 @@ class AchievementsSection extends StatelessWidget {
             // Картка 1: Трофеї
             _buildAchievementCard(
               title: 'Trophy',
-              leadingWidget: const Text('🏆', style: TextStyle(fontSize: 24)),
+              leadingWidget: const Text('🏆', style: TextStyle(fontSize: 26)),
               value: trophiesCount.toString(),
             ),
 
             // Картка 2: Вогники
             _buildAchievementCard(
               title: 'Fire',
-              leadingWidget: const Text('🔥', style: TextStyle(fontSize: 24)),
+              leadingWidget: const Text('🔥', style: TextStyle(fontSize: 26)),
               value: firesCount.toString(),
             ),
 
-            // Картка 3: Відсоток виконання (передаємо твій віджет у leadingWidget!)
+            // Картка 3: Відсоток виконання
             _buildAchievementCard(
               title: 'Completion Rate',
-              leadingWidget: SizedBox(
-                width: 24,
-                height: 24,
-                child: CompletionRateCircle(percentage: completionRate),
-              ),
+              leadingWidget: CompletionRateCircle(percentage: completionRate),
               value: '${(completionRate * 100).toInt()}%',
             ),
 
             // Картка 4: Найкращий стрік (з підтримкою сірого тексту "days" як у дизайні)
             _buildAchievementCard(
               title: 'Best Streak',
-              leadingWidget: const Text('🗓️', style: TextStyle(fontSize: 22)),
+              leadingWidget: const Text('🗓️', style: TextStyle(fontSize: 26)),
               value: bestStreakDays.toString(),
               suffixText: 'days', // Передаємо хвостик
             ),
@@ -81,19 +77,19 @@ class AchievementsSection extends StatelessWidget {
   // =========================================================================
   Widget _buildAchievementCard({
     required String title,
-    required Widget leadingWidget, // Тепер приймає Widget (іконку або кружечок)
+    required Widget leadingWidget,
     required String value,
-    String? suffixText, // Необов'язковий текст після цифри (наприклад, "days")
+    String? suffixText,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16), // Трохи зменшив з 20 до 16, щоб усе ідеально влізло
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         // ТВІЙ ОРИГІНАЛЬНИЙ ДИЗАЙН ФОНУ (БЕЗ ЗМІН)
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF1E3A7A).withOpacity(0.8),
+            const Color(0xFF1E3A7A).withOpacity(0.4),
             const Color(0xFF122246).withOpacity(0.20),
           ],
         ),
@@ -103,8 +99,8 @@ class AchievementsSection extends StatelessWidget {
 
       // НОВА СТРУКТУРА: центрування по вертикалі та горизонталі
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,  // Центрує контент по вертикалі
-        crossAxisAlignment: CrossAxisAlignment.center, // Центрує контент по горизонталі
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // 1. ЗАГОЛОВОК (Зверху по центру)
           Text(
@@ -124,7 +120,7 @@ class AchievementsSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              leadingWidget, // Наша іконка або кружечок прогресу
+              leadingWidget,
               const SizedBox(width: 8),
 
               // Основна велика цифра
