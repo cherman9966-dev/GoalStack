@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
-import 'package:goalstack/settings/main_layout.dart';
 import 'empty_topic_screen.dart';
 import '../widgets/card/goal_card.dart';
 
@@ -14,6 +13,8 @@ class MyTopicPage extends ConsumerStatefulWidget {
   ConsumerState<MyTopicPage> createState() => _MyTopicPageState();
 }
 
+final failureCheckPerformedProvider = StateProvider<bool>((ref) => false);
+
 class _MyTopicPageState extends ConsumerState<MyTopicPage> {
   
   @override
@@ -21,7 +22,11 @@ class _MyTopicPageState extends ConsumerState<MyTopicPage> {
     super.initState();
     // Перевірка на провалені цілі після того, як кадр буде побудовано
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkFailedGoals();
+      final wasChecked = ref.read(failureCheckPerformedProvider);
+      if (!wasChecked) {
+        _checkFailedGoals();
+        ref.read(failureCheckPerformedProvider.notifier).state = true;
+      }
     });
   }
 
@@ -41,7 +46,7 @@ class _MyTopicPageState extends ConsumerState<MyTopicPage> {
         // Показуємо попап провалу
         showDialog(
           context: context,
-          barrierColor: Colors.black.withOpacity(0.6),
+          barrierColor: Colors.black.withValues(alpha: 0.6),
           builder: (context) => GoalFailPopup(
             goalId: goal.id,
             completedDays: goal.weekDaysStatus.where((s) => s).length,

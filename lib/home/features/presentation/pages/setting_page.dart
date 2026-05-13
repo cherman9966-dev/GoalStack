@@ -7,7 +7,6 @@ import 'package:goalstack/home/features/presentation/widgets/utils/setting_page_
 import 'package:goalstack/home/features/presentation/widgets/utils/setting_page_widgets/achievements_section.dart';
 import 'package:goalstack/home/features/presentation/widgets/utils/setting_page_widgets/data_management_section.dart';
 import 'package:goalstack/home/features/presentation/widgets/utils/setting_page_widgets/notifications_section.dart';
-import 'package:goalstack/home/profile/data/user_profile_entity.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SettingPage extends ConsumerStatefulWidget {
@@ -336,7 +335,7 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                                   onPressed: () => Navigator.pop(context),
                                   style: OutlinedButton.styleFrom(
                                     side: BorderSide(
-                                      color: Colors.white.withOpacity(0.2),
+                                      color: Colors.white.withOpacity(0.6),
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -346,25 +345,32 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                                     'Cancel',
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 18,
+                                      fontSize: 16,
                                     ),
                                   ),
                                 ),
                                 const SizedBox(width: 12),
-                                TextButton(
+                                OutlinedButton(
                                   onPressed: () {
                                     ref
                                         .read(userProfileProvider.notifier)
                                         .updateName(nameController.text);
                                     Navigator.pop(context);
                                   },
+                                  style: OutlinedButton.styleFrom(
+                                    side: BorderSide(
+                                      color: Colors.white.withOpacity(0.6),
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
                                   child: const Text(
                                     'Save',
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight
-                                          .bold, // Виділяємо головну дію
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),

@@ -32,13 +32,11 @@ class GoalEntity {
       ? IconData(iconCodePoint!, fontFamily: 'MaterialIcons')
       : null;
 
-  @ignore
   set icon(IconData? value) => iconCodePoint = value?.codePoint;
 
   @ignore
   Color? get color => colorValue != null ? Color(colorValue!) : null;
 
-  @ignore
   set color(Color? value) => colorValue = value?.value;
 
   String goalType = 'all_days';

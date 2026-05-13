@@ -81,11 +81,9 @@ class _CustomTimePickerPopupState extends State<TimePickerPopup> {
                     decoration: BoxDecoration(
                       color: const Color(0xFF0A1329),
                       borderRadius: BorderRadius.circular(16),
-
-                      // Вінтажна обводка
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.40),
-                        width: 1.5,
+                        color: Colors.white.withOpacity(0.8),
+                        width: 1.2,
                       ),
 
                       gradient: LinearGradient(
@@ -207,8 +205,8 @@ class _CustomTimePickerPopupState extends State<TimePickerPopup> {
                       color: const Color(0xFF0A1329),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.40),
-                        width: 1.5,
+                        color: Colors.white.withOpacity(0.8),
+                        width: 1.2,
                       ),
 
                       gradient: LinearGradient(
@@ -264,7 +262,7 @@ class _CustomTimePickerPopupState extends State<TimePickerPopup> {
                 OutlinedButton(
                   onPressed: () => Navigator.pop(context), // Повертає null (скасування)
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                    side: BorderSide(color: Colors.white.withOpacity(0.6)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -272,7 +270,7 @@ class _CustomTimePickerPopupState extends State<TimePickerPopup> {
                   child: Text(
                     'Cancel',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white,
                       fontSize: 18,
                     ),
                   ),
@@ -284,7 +282,7 @@ class _CustomTimePickerPopupState extends State<TimePickerPopup> {
                     Navigator.pop(context, formattedTime);
                   },
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                    side: BorderSide(color: Colors.white.withOpacity(0.6)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -292,7 +290,7 @@ class _CustomTimePickerPopupState extends State<TimePickerPopup> {
                   child: const Text(
                     'Save',
                     style: TextStyle(
-                      color: Color(0xFF5C85FF),
+                      color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
