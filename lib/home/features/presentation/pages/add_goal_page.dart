@@ -203,7 +203,8 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
                   ),
                   child: Center(
                     child: Container(
-                      padding: const EdgeInsets.all(23.0),
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 23.0),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
@@ -224,7 +225,7 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min, // Важливо для центрування
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           // 1. MAIN TOPIC
                           _buildLabel('Topic name'),
