@@ -50,7 +50,7 @@ class GoalFiresRow extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.black,
               fontSize: 11,
               fontWeight: FontWeight.w600,
             ),

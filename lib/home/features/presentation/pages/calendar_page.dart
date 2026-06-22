@@ -32,21 +32,12 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     final goals = ref.watch(goalListProvider);
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/log_background_fon.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
         child: SafeArea(
           child: Column(
             children: [
@@ -55,13 +46,15 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(widget.calendarBorderRadius),
+                    borderRadius: BorderRadius.circular(
+                      widget.calendarBorderRadius,
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withAlpha((255 * 0.3).round()),
                         blurRadius: 15,
                         offset: const Offset(0, 5),
-                      )
+                      ),
                     ],
                   ),
                   child: TableCalendar(
@@ -80,27 +73,47 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
                       formatButtonVisible: false,
                       titleCentered: true,
                       titleTextStyle: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                      leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.black),
-                      rightChevronIcon: const Icon(Icons.chevron_right, color: Colors.black),
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      leftChevronIcon: const Icon(
+                        Icons.chevron_left,
+                        color: Colors.black,
+                      ),
+                      rightChevronIcon: const Icon(
+                        Icons.chevron_right,
+                        color: Colors.black,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.grey[100],
                         borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(widget.calendarBorderRadius)),
+                          top: Radius.circular(widget.calendarBorderRadius),
+                        ),
                       ),
                     ),
                     daysOfWeekStyle: const DaysOfWeekStyle(
-                      weekdayStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-                      weekendStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                      weekdayStyle: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      weekendStyle: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     calendarStyle: CalendarStyle(
                       defaultTextStyle: const TextStyle(color: Colors.black),
                       weekendTextStyle: const TextStyle(color: Colors.black),
                       todayTextStyle: const TextStyle(color: Colors.black),
-                      todayDecoration: const BoxDecoration(color: Colors.orange, shape: BoxShape.circle),
-                      selectedTextStyle: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                      todayDecoration: const BoxDecoration(
+                        color: Colors.orange,
+                        shape: BoxShape.circle,
+                      ),
+                      selectedTextStyle: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                       selectedDecoration: BoxDecoration(
                         border: Border.all(color: Colors.blueAccent, width: 3),
                         shape: BoxShape.circle,
@@ -109,13 +122,18 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
                     calendarBuilders: CalendarBuilders(
                       markerBuilder: (context, date, events) {
                         final dateOnly = date.dateOnly;
-                        final activeGoals = goals.where((g) => g.completedDates.contains(dateOnly)).toList();
-                        final streakGoals = goals.where((g) => g.streakEarnedDates.contains(dateOnly)).toList();
+                        final activeGoals = goals
+                            .where((g) => g.completedDates.contains(dateOnly))
+                            .toList();
+                        final streakGoals = goals
+                            .where(
+                              (g) => g.streakEarnedDates.contains(dateOnly),
+                            )
+                            .toList();
 
                         if (activeGoals.isEmpty && streakGoals.isEmpty) {
                           return null;
                         }
-
 
                         return Stack(
                           alignment: Alignment.center,
@@ -125,7 +143,10 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
                               Container(
                                 margin: const EdgeInsets.all(4),
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.orangeAccent, width: 2),
+                                  border: Border.all(
+                                    color: Colors.orangeAccent,
+                                    width: 2,
+                                  ),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
@@ -134,16 +155,22 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
                                 top: -1,
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
-                                  children: activeGoals.take(5).map((g) =>
-                                      Container(
-                                        width: 6,
-                                        height: 6,
-                                        margin: const EdgeInsets.symmetric(horizontal: 1),
-                                        decoration: BoxDecoration(
+                                  children: activeGoals
+                                      .take(5)
+                                      .map(
+                                        (g) => Container(
+                                          width: 6,
+                                          height: 6,
+                                          margin: const EdgeInsets.symmetric(
+                                            horizontal: 1,
+                                          ),
+                                          decoration: BoxDecoration(
                                             color: g.color ?? Colors.orange,
-                                            shape: BoxShape.circle),
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
                                       )
-                                  ).toList(),
+                                      .toList(),
                                 ),
                               ),
                           ],
@@ -156,9 +183,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
 
               const Divider(color: Colors.white12, indent: 20, endIndent: 20),
 
-              Expanded(
-                child: _buildTimeline(goals),
-              ),
+              Expanded(child: _buildTimeline(goals)),
             ],
           ),
         ),
@@ -187,12 +212,21 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
       if (!selectedDate.isBefore(now)) return false;
 
       // Перевірка дати народження (Лікуємо привидів минулого)
-      final goalCreationDate = DateTime(goal.createdAt.year, goal.createdAt.month, goal.createdAt.day);
-      final currentDateToCompare = DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
+      final goalCreationDate = DateTime(
+        goal.createdAt.year,
+        goal.createdAt.month,
+        goal.createdAt.day,
+      );
+      final currentDateToCompare = DateTime(
+        selectedDate.year,
+        selectedDate.month,
+        selectedDate.day,
+      );
       if (currentDateToCompare.isBefore(goalCreationDate)) return false;
 
       // Перевірка розкладу (Лікуємо RangeError та перевіряємо чи призначено на цей день)
-      final bool hasValidWeekDays = goal.weekDaysStatus != null && goal.weekDaysStatus.length >= 7;
+      final bool hasValidWeekDays =
+          goal.weekDaysStatus != null && goal.weekDaysStatus.length >= 7;
       final bool isScheduledForToday = hasValidWeekDays
           ? goal.weekDaysStatus[selectedDate.weekday - 1]
           : false;
@@ -205,7 +239,9 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
       itemBuilder: (context, index) {
         final goal = displayGoals[index];
         final bool isGoalFinished = goal.isCompleted;
-        final bool isCompletedToday = goal.completedDates.contains(selectedDate);
+        final bool isCompletedToday = goal.completedDates.contains(
+          selectedDate,
+        );
         final bool isFailedStreak = !isCompletedToday;
 
         return Container(
@@ -216,8 +252,8 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                const Color(0xFF122246).withOpacity(0.45),
-                const Color(0xFF091428).withOpacity(0.45),
+                const Color(0xFFEAE5DA),
+                const Color(0xFFEAE5DA),
               ],
             ),
             borderRadius: BorderRadius.circular(24),
@@ -225,8 +261,8 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
               color: isFailedStreak
                   ? Colors.redAccent.withOpacity(0.8)
                   : (isGoalFinished
-                  ? Colors.orangeAccent.withOpacity(0.8)
-                  : Colors.white.withOpacity(0.18)),
+                        ? Colors.orangeAccent.withOpacity(0.8)
+                        : Colors.black.withOpacity(0.18)),
               width: isFailedStreak ? 2.0 : 1.0,
             ),
           ),
@@ -235,13 +271,20 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: (isFailedStreak ? Colors.red :
-                  (goal.color ?? Colors.orange)).withAlpha((255 * 0.15).round()),
+                  color:
+                      (isFailedStreak
+                              ? Colors.red
+                              : (goal.color ?? Colors.orange))
+                          .withAlpha((255 * 0.15).round()),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  isFailedStreak ? Icons.close : (goal.icon ?? Icons.check_circle),
-                  color: isFailedStreak ? Colors.redAccent : (goal.color ?? Colors.orange),
+                  isFailedStreak
+                      ? Icons.close
+                      : (goal.icon ?? Icons.check_circle),
+                  color: isFailedStreak
+                      ? Colors.redAccent
+                      : (goal.color ?? Colors.orange),
                   size: 24,
                 ),
               ),
@@ -253,7 +296,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
                     Text(
                       goal.title,
                       style: TextStyle(
-                        color: isFailedStreak ? Colors.white70 : Colors.white,
+                        color: isFailedStreak ? Colors.black : Colors.black,
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
                       ),
@@ -262,10 +305,13 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
                     Text(
                       isFailedStreak
                           ? 'Missed day ❌'
-                          : (isGoalFinished ? 'Goal achieved! 🔥' : 'Activity tracked'),
+                          : (isGoalFinished
+                                ? 'Goal achieved! 🔥'
+                                : 'Activity tracked'),
                       style: TextStyle(
-                        color: isFailedStreak ? Colors.redAccent.withAlpha((255 * 0.7).round()) :
-                        Colors.white,
+                        color: isFailedStreak
+                            ? Colors.redAccent.withAlpha((255 * 0.7).round())
+                            : Colors.black,
                         fontSize: 15,
                       ),
                     ),

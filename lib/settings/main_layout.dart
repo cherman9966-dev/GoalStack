@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
-import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/custom_botom_bar.dart';
+import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/navigation/custom_botom_bar.dart';
 import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/home_app_bar.dart';
 
 class MainLayout extends ConsumerWidget {
@@ -13,7 +13,9 @@ class MainLayout extends ConsumerWidget {
   int _calculateSelectedIndex(BuildContext context) {
     final String location = GoRouterState.of(context).uri.path;
     if (location.startsWith('/calendar')) return 1;
-    if (location.startsWith('/settings')) return 2;
+    if (location.startsWith('/artifacts')) return 2;
+    if (location.startsWith('/add_goal_page')) return 3;
+
     return 0;
   }
 
@@ -32,7 +34,7 @@ class MainLayout extends ConsumerWidget {
           // Твій спільний фон для всього додатка
           Positioned.fill(
             child: Image.asset(
-              'assets/images/log_background_fon.png',
+              'assets/images/main_backgroundfon.png',
               fit: BoxFit.cover,
             ),
           ),

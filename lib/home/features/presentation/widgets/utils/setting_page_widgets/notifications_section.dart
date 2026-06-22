@@ -37,7 +37,7 @@ class NotificationsSection extends ConsumerWidget {
         const Text(
           'Notifications',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
@@ -49,12 +49,12 @@ class NotificationsSection extends ConsumerWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                const Color(0xFF1E3A7A).withOpacity(0.8),
-                const Color(0xFF122246).withOpacity(0.20),
+                const Color(0xFFEAE5DA),
+                const Color(0xFFEAE5DA),
               ],
             ),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.1)),
+            border: Border.all(color: Colors.black.withOpacity(0.1)),
           ),
           child: Column(
             children: [
@@ -62,17 +62,17 @@ class NotificationsSection extends ConsumerWidget {
               SwitchListTile(
                 title: const Text(
                   'Daily Reminder',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.black),
                 ),
                 subtitle: Text(
                   'Stay on track with reminders about your goal progress',
-                  style: TextStyle(color: Colors.white.withOpacity(0.8)),
+                  style: TextStyle(color: Colors.black.withOpacity(0.8)),
                 ),
                 value: notificationState.isEnabled,
-                activeColor: Colors.white,
+                activeColor: Colors.black,
                 activeTrackColor: const Color(0xFF7B61FF),
-                inactiveThumbColor: Colors.white,
-                inactiveTrackColor: Colors.white.withOpacity(0.20),
+                inactiveThumbColor: Colors.black,
+                inactiveTrackColor: Colors.black.withOpacity(0.20),
                 onChanged: (bool value) {
                   ref.read(notificationSettingsProvider.notifier).toggleNotifications(value);
                 },
@@ -81,7 +81,7 @@ class NotificationsSection extends ConsumerWidget {
               if (notificationState.isEnabled)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Divider(color: Colors.white.withOpacity(0.2), height: 1),
+                  child: Divider(color: Colors.black.withOpacity(0.2), height: 1),
                 ),
 
               // РЯДОК ВИБОРУ ЧАСУ
@@ -90,14 +90,14 @@ class NotificationsSection extends ConsumerWidget {
                   leading: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.08),
+                      color: Colors.black.withOpacity(0.08),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Icons.access_time, color: Colors.white, size: 22),
+                    child: const Icon(Icons.access_time, color: Colors.black, size: 22),
                   ),
                   title: const Text(
                     'Reminder time',
-                    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+                    style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -105,12 +105,12 @@ class NotificationsSection extends ConsumerWidget {
                       Text(
                         '${notificationState.selectedTime.hour.toString().padLeft(2, '0')}:${notificationState.selectedTime.minute.toString().padLeft(2, '0')}',
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 20,
                         ),
                       ),
                       const SizedBox(width: 4),
-                      Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.8), size: 20),
+                      Icon(Icons.chevron_right, color: Colors.black.withOpacity(0.8), size: 20),
                     ],
                   ),
                   onTap: () => _selectReminderTime(context, ref, notificationState.selectedTime),

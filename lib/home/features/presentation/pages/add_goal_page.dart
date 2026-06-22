@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:goalstack/home/features/domain/entities/goal_entity.dart';
 import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
 import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/goal_mode_selector.dart';
-import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/primary_gradient_button.dart';
+import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/navigation/primary_gradient_button.dart';
 
 class AddGoalPage extends ConsumerStatefulWidget {
   final GoalEntity? goalToEdit;
@@ -180,12 +180,10 @@ class _AddGoalPageState extends ConsumerState<AddGoalPage> {
         ),
       ),
       body: Container(
-        width: double.infinity,
-        height: double.infinity,
         // Твій фірмовий темний фон
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/main_background2.png'),
+            image: AssetImage('assets/images/main_backgroundfon.png'),
             fit: BoxFit.cover,
           ),
         ),

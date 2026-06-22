@@ -77,6 +77,12 @@ class UserProfileNotifier extends StateNotifier<UserProfileEntity> {
     await _repository.saveProfile(updatedProfile);
   }
 
+  Future<void> updateReminderTime(String time) async {
+    state.reminderTime = time;
+    await _repository.saveProfile(state);
+    state = await _repository.getProfile();
+  }
+
   void _refreshState() {
     state = state;
   }

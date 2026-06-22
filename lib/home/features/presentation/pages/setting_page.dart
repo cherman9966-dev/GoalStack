@@ -49,7 +49,7 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
             ],
           ),
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.white.withOpacity(0.28)),
+          border: Border.all(color: Colors.black.withOpacity(0.28)),
           // Твоє світіння
           boxShadow: [
             BoxShadow(
@@ -69,7 +69,7 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.4),
+                    color: Colors.black.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -77,10 +77,10 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
 
               // Твої пункти меню
               ListTile(
-                leading: const Icon(Icons.photo_library, color: Colors.white),
+                leading: const Icon(Icons.photo_library, color: Colors.black),
                 title: const Text(
                   'Choose new photo',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  style: TextStyle(color: Colors.black, fontSize: 18),
                 ),
                 onTap: () {
                   Navigator.pop(context);
@@ -103,10 +103,10 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                   },
                 ),
               ListTile(
-                leading: const Icon(Icons.close, color: Colors.white54),
+                leading: const Icon(Icons.close, color: Colors.black54),
                 title: const Text(
                   'Cancel',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  style: TextStyle(color: Colors.black, fontSize: 18),
                 ),
                 onTap: () => Navigator.pop(context),
               ),
@@ -126,7 +126,7 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
       children: [
         Positioned.fill(
           child: Image.asset(
-            'assets/images/log_background_fon.png',
+            'assets/images/main_backgroundfon.png',
             fit: BoxFit.cover,
           ),
         ),
@@ -140,10 +140,10 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
             elevation: 0,
             title: const Text(
               'Settings',
-              style: TextStyle(color: Colors.white, fontSize: 28),
+              style: TextStyle(color: Colors.black, fontSize: 28),
             ),
             centerTitle: true,
-            iconTheme: const IconThemeData(color: Colors.white),
+            iconTheme: const IconThemeData(color: Colors.black),
           ),
           body: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -189,7 +189,7 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.black.withOpacity(0.2),
                     width: 1,
                   ),
                 ),
@@ -203,7 +203,7 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                       ? const Icon(
                           Icons.person_outline,
                           size: 48,
-                          color: Colors.white54,
+                          color: Colors.black54,
                         )
                       : null,
                 ),
@@ -244,7 +244,7 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
               Text(
                 userProfile.name,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
                 ),
@@ -278,7 +278,7 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                           ),
                           borderRadius: BorderRadius.circular(24),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.28),
+                            color: Colors.black.withOpacity(0.28),
                           ),
                           boxShadow: [
                             BoxShadow(
@@ -297,7 +297,7 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                             const Text(
                               'Change Name',
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -306,23 +306,23 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                             TextField(
                               controller: nameController,
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontSize: 18,
                               ),
-                              cursorColor: Colors.white,
+                              cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 hintText: "Enter your nickname",
                                 hintStyle: const TextStyle(
-                                  color: Colors.white38,
+                                  color: Colors.black38,
                                 ),
                                 // Стилізуємо лінію під текстом, щоб пасувала до дизайну
                                 enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Colors.white.withOpacity(0.3),
+                                    color: Colors.black.withOpacity(0.3),
                                   ),
                                 ),
                                 focusedBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
+                                  borderSide: BorderSide(color: Colors.black),
                                 ),
                               ),
                             ),
@@ -335,7 +335,7 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                                   onPressed: () => Navigator.pop(context),
                                   style: OutlinedButton.styleFrom(
                                     side: BorderSide(
-                                      color: Colors.white.withOpacity(0.6),
+                                      color: Colors.black.withOpacity(0.6),
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -344,7 +344,7 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                                   child: const Text(
                                     'Cancel',
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.black,
                                       fontSize: 16,
                                     ),
                                   ),
@@ -359,7 +359,7 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                                   },
                                   style: OutlinedButton.styleFrom(
                                     side: BorderSide(
-                                      color: Colors.white.withOpacity(0.6),
+                                      color: Colors.black.withOpacity(0.6),
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -368,7 +368,7 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                                   child: const Text(
                                     'Save',
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.black,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -385,10 +385,10 @@ class _SettingsPageState extends ConsumerState<SettingPage> {
                 child: Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.black.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.edit, size: 18, color: Colors.white),
+                  child: const Icon(Icons.edit, size: 18, color: Colors.black),
                 ),
               ),
             ],

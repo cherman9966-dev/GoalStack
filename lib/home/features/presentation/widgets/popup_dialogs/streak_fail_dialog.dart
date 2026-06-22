@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
-import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/primary_gradient_button.dart';
+import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/navigation/primary_gradient_button.dart';
 
 class GoalFailPopup extends ConsumerStatefulWidget {
   final int goalId;
@@ -62,14 +62,14 @@ class _GoalFailPopupState extends ConsumerState<GoalFailPopup> with SingleTicker
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  const Color(0xFF122246).withOpacity(0.95),
-                  const Color(0xFF050B14).withOpacity(0.95),
+                  const Color(0xFFEAE5DA),
+                  const Color(0xFFEAE5DA),
                 ],
               ),
               borderRadius: BorderRadius.circular(28),
               // Червоно-синє світіння по краях замість золотого
               border: Border.all(
-                color: Colors.redAccent.withOpacity(0.4),
+                color: Colors.redAccent.withOpacity(1.0),
                 width: 1.5,
               ),
               boxShadow: [
@@ -93,7 +93,7 @@ class _GoalFailPopupState extends ConsumerState<GoalFailPopup> with SingleTicker
                   style: TextStyle(
                     fontSize: 28, // Трохи менше для довгого слова, щоб влізло
                     fontWeight: FontWeight.w800,
-                    color: Colors.white,
+                    color: Colors.black,
                     letterSpacing: 1,
                   ),
                 ),
@@ -104,7 +104,7 @@ class _GoalFailPopupState extends ConsumerState<GoalFailPopup> with SingleTicker
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
-                    color: Colors.white70,
+                    color: Colors.black,
                     height: 1.45,
                   ),
                 ),
@@ -162,12 +162,12 @@ class _GoalFailPopupState extends ConsumerState<GoalFailPopup> with SingleTicker
                   children: [
                     const Text(
                       'Completed: ',
-                      style: TextStyle(color: Colors.white70, fontSize: 15),
+                      style: TextStyle(color: Colors.black, fontSize: 15),
                     ),
                     Text(
                       '${widget.completedDays}/${widget.targetDays} days',
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
@@ -175,7 +175,7 @@ class _GoalFailPopupState extends ConsumerState<GoalFailPopup> with SingleTicker
                     const SizedBox(width: 24),
                     const Text(
                       'Result: ',
-                      style: TextStyle(color: Colors.white70, fontSize: 15),
+                      style: TextStyle(color: Colors.black, fontSize: 15),
                     ),
                     const Text(
                       'Failed',
@@ -206,8 +206,8 @@ class _GoalFailPopupState extends ConsumerState<GoalFailPopup> with SingleTicker
                   height: 45,
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.white.withOpacity(0.8)),
-                      foregroundColor: Colors.white,
+                      side: BorderSide(color: Colors.black.withOpacity(0.8)),
+                      foregroundColor: Colors.black,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(28),

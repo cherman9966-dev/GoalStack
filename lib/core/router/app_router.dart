@@ -6,6 +6,7 @@ import 'package:goalstack/home/features/presentation/pages/calendar_page.dart';
 import 'package:goalstack/home/features/presentation/pages/login_page.dart';
 import 'package:goalstack/home/features/presentation/pages/my_topic_page.dart';
 import 'package:goalstack/home/features/presentation/pages/setting_page.dart';
+import 'package:goalstack/home/features/presentation/pages/artifacts_page.dart';
 import 'package:goalstack/settings/main_layout.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,7 +35,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           child: SettingPage(),
         ),
       ),
-
       ShellRoute(
         builder: (context, state, child) {
           return MainLayout(child: child);
@@ -50,6 +50,12 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: '/calendar',
             pageBuilder: (context, state) => const NoTransitionPage(
               child: CalendarPage(),
+            ),
+          ),
+          GoRoute(
+            path: '/artifacts',
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: ArtifactsCollection(),
             ),
           ),
         ],

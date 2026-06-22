@@ -56,17 +56,17 @@ class NotificationSettings extends _$NotificationSettings {
     if (value) {
       // Запитуємо дозволи (особливо важливо для iOS та Android 13+)
       final hasPermission = await NotificationService.requestPermissions();
-      if (!hasPermission) {
-        // Якщо дозволу немає, залишаємо вимкненим
-        state = state.copyWith(isEnabled: false);
-        return;
-      }
+      // if (!hasPermission) {
+      //   // Якщо дозволу немає, залишаємо вимкненим
+      //   state = state.copyWith(isEnabled: false);
+      //   return;
+      // }
     }
 
     state = state.copyWith(isEnabled: value);
     
-    // Зберігаємо в профіль через репозиторій
-    await ref.read(userProfileRepositoryProvider).updateNotificationsEnabled(value);
+    // Зберігаємо в профіль через провайдер стану
+    await ref.read(userProfileProvider.notifier).toggleNotifications(value);
     
     // Оновлюємо розклад
     await _updateSchedule();
@@ -76,9 +76,9 @@ class NotificationSettings extends _$NotificationSettings {
   Future<void> updateTime(TimeOfDay newTime) async {
     state = state.copyWith(selectedTime: newTime);
     
-    // Зберігаємо в профіль
+    // Зберігаємо в профіль через провайдер стану
     final timeString = '${newTime.hour.toString().padLeft(2, '0')}:${newTime.minute.toString().padLeft(2, '0')}';
-    await ref.read(userProfileRepositoryProvider).updateReminderTime(timeString);
+    await ref.read(userProfileProvider.notifier).updateReminderTime(timeString);
     
     // Оновлюємо розклад
     await _updateSchedule();

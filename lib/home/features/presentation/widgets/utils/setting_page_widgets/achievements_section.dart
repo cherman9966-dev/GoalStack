@@ -24,7 +24,7 @@ class AchievementsSection extends StatelessWidget {
         const Text(
           'Achievements',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
@@ -89,12 +89,12 @@ class AchievementsSection extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF1E3A7A).withOpacity(0.4),
-            const Color(0xFF122246).withOpacity(0.20),
+            const Color(0xFFEAE5DA),
+            const Color(0xFFEAE5DA),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
+        border: Border.all(color: Colors.black.withOpacity(0.2)),
       ),
 
       // НОВА СТРУКТУРА: центрування по вертикалі та горизонталі
@@ -106,7 +106,7 @@ class AchievementsSection extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              color: Colors.white,
+              color: Colors.black,
               fontSize: 15,
               fontWeight: FontWeight.w500,
             ),
@@ -127,7 +127,7 @@ class AchievementsSection extends StatelessWidget {
               Text(
                 value,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
@@ -139,7 +139,7 @@ class AchievementsSection extends StatelessWidget {
                 Text(
                   suffixText,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.black.withOpacity(0.5),
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
                   ),

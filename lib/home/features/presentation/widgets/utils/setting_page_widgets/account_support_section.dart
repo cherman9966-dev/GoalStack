@@ -11,7 +11,7 @@ class AccountSupportSection extends StatelessWidget {
         const Text(
           'Account & Support',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 21,
             fontWeight: FontWeight.bold,
           ),
@@ -52,25 +52,25 @@ class AccountSupportSection extends StatelessWidget {
       leading: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.05),
+          color: Colors.black.withOpacity(0.05),
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: Colors.white),
+        child: Icon(icon, color: Colors.black),
       ),
       title: Text(
         title,
         style: const TextStyle(
-          color: Colors.white,
+          color: Colors.black,
           fontWeight: FontWeight.w500,
         ),
       ),
       subtitle: subtitle != null
           ? Text(
               subtitle,
-              style: TextStyle(color: Colors.white.withOpacity(0.5)),
+              style: TextStyle(color: Colors.black.withOpacity(0.5)),
             )
           : null,
-      trailing: const Icon(Icons.chevron_right, color: Colors.white54),
+      trailing: const Icon(Icons.chevron_right, color: Colors.black54),
       onTap: onTap,
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/primary_gradient_button.dart';
+import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/navigation/primary_gradient_button.dart';
 
 class EmptyTopicScreen extends StatefulWidget {
   const EmptyTopicScreen({super.key});
@@ -55,7 +55,7 @@ class _EmptyTopicScreenState extends State<EmptyTopicScreen> with SingleTickerPr
               child: Image.asset(
                 'assets/icons/vector_flame.png',
                 height: 140,
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.black.withOpacity(0.5),
                 colorBlendMode: BlendMode.srcIn,
               ),
             ),
@@ -66,7 +66,7 @@ class _EmptyTopicScreenState extends State<EmptyTopicScreen> with SingleTickerPr
               'Create a topic and check in with\none tap.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
               ),

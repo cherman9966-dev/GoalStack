@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/navigation/crystal_add_button.dart';
 
 class CustomBottomBar extends StatelessWidget {
   const CustomBottomBar({super.key, required int currentIndex});
   int _calculateSelectedIndex(BuildContext context) {
     final String location = GoRouterState.of(context).uri.path;
     if (location.startsWith('/calendar')) return 1;
+    if (location.startsWith('/artifacts')) return 2;
     return 0;
   }
 
@@ -27,7 +29,7 @@ class CustomBottomBar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
 
               decoration: BoxDecoration(
-                color: const Color(0xFF1E293B).withOpacity(0.6),
+                color: const Color(0xFFF1EFE9).withOpacity(0.7),
                 borderRadius: BorderRadius.circular(40),
                 border: Border.all(
                   color: Colors.white.withOpacity(0.2),
@@ -57,44 +59,21 @@ class CustomBottomBar extends StatelessWidget {
                     icon: Icons.calendar_month_outlined, // Контурна іконка
                     isActive: currentIndex == 1,
                     route: '/calendar',
+                  ),const SizedBox(width: 6), // Відстань між кнопками
+                  _buildNavItem(
+                    context: context,
+                    icon: Icons.architecture_outlined, // Контурна іконка
+                    isActive: currentIndex == 2,
+                    route: '/artifacts',
                   ),
                 ],
               ),
             ),
 
             // --- ПРАВИЙ ОСТРІВЕЦЬ (Кнопка створення +) ---
-            GestureDetector(
+            // Виклик з дефолтними розмірами (70x70)
+            CustomCrystalButton(
               onTap: () => context.go('/add_goal'),
-              // Перехід на екран створення
-              child: Container(
-                height: 54, // Висота овалу
-                width: 86, // Ширина овалу (робить його витягнутим)
-                decoration: BoxDecoration(
-                  // Градієнт як на дизайні
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFFE65C00),
-                      Color(0xFFFF7A1A),
-                      Color(0xFFFFC700),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(32), // Сильне закруглення
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFFFF5A00).withOpacity(0.3),
-                      blurRadius: 15,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.add_box_outlined,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ),
             ),
           ],
         ),
@@ -119,9 +98,9 @@ class CustomBottomBar extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    const Color(0xFF1E3A7A).withOpacity(0.8),
+                    const Color(0xFFDED9D1),
                     // Світліший синій
-                    const Color(0xFF122246).withOpacity(0.8),
+                    const Color(0xFF9E978E)
                     // Основний колір, але м'якший
                   ],
                 )
@@ -136,7 +115,7 @@ class CustomBottomBar extends StatelessWidget {
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: const Color(0xFF1E3A7A).withOpacity(0.8),
+                    color: const  Color(0xFFDED9D1).withOpacity(0.9),
                     blurRadius: 10,
                     spreadRadius: 1,
                   ),
@@ -146,7 +125,7 @@ class CustomBottomBar extends StatelessWidget {
         child: Icon(
           icon,
           size: 22,
-          color: isActive ? Colors.white : Colors.white.withOpacity(0.4),
+          color: isActive ? Colors.black : Colors.black.withOpacity(0.4),
         ),
       ),
     );

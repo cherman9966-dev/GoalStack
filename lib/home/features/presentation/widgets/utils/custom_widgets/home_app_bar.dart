@@ -35,7 +35,7 @@ class HomeAppBar extends ConsumerWidget {
               Text(
                 _getGreeting(),
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
@@ -44,7 +44,7 @@ class HomeAppBar extends ConsumerWidget {
               Text(
                 _getFormattedDate(),
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.black.withOpacity(0.8),
                   fontSize: 18,
                 ),
               ),

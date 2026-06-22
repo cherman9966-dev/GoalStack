@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../widgets/animations/animated_fire_logo.dart';
-import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/primary_gradient_button.dart';
+import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/navigation/primary_gradient_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
         height: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/log_background_fon.png'),
+            image: AssetImage('assets/images/main_backgroundfon.png'),
             fit: BoxFit.cover,
           ),
         ),

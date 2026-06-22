@@ -29,7 +29,7 @@ class _DataManagementSectionState extends ConsumerState<DataManagementSection> {
         const Text(
           'Data & Storage',
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
@@ -41,18 +41,18 @@ class _DataManagementSectionState extends ConsumerState<DataManagementSection> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                const Color(0xFF1E3A7A).withOpacity(0.8),
-                const Color(0xFF122246).withOpacity(0.20),
+                const Color(0xFFEAE5DA),
+                const Color(0xFFEAE5DA),
               ],
             ),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.1)),
+            border: Border.all(color: Colors.black.withOpacity(0.1)),
           ),
           child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Divider(color: Colors.white.withOpacity(0.1), height: 1),
+                child: Divider(color: Colors.black.withOpacity(0.1), height: 1),
               ),
 
               // КНОПКА СКИДАННЯі
@@ -60,12 +60,12 @@ class _DataManagementSectionState extends ConsumerState<DataManagementSection> {
                 leading: Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.08),
+                    color: Colors.black.withOpacity(0.08),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(
                     Icons.delete_forever_outlined,
-                    color: Colors.white,
+                    color: Colors.black,
                     size: 24,
                   ),
                 ),
@@ -74,7 +74,7 @@ class _DataManagementSectionState extends ConsumerState<DataManagementSection> {
                       ? 'Reset'
                       : _buttonTextController.text,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -82,13 +82,13 @@ class _DataManagementSectionState extends ConsumerState<DataManagementSection> {
                 subtitle: Text(
                   'Zero out all streaks and fires',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.black.withOpacity(0.8),
                     fontSize: 14,
                   ),
                 ),
                 trailing: const Icon(
                   Icons.chevron_right,
-                  color: Colors.white54,
+                  color: Colors.black54,
                 ),
                 onTap: () => _showResetConfirmation(context),
               ),
@@ -112,12 +112,12 @@ class _DataManagementSectionState extends ConsumerState<DataManagementSection> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                const Color(0xFF1E3A7A).withOpacity(0.95),
-                const Color(0xFF122246).withOpacity(0.90),
+                const Color(0xFFEAE5DA),
+                const Color(0xFFEAE5DA),
               ],
             ),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            border: Border.all(color: Colors.black.withOpacity(0.2)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -128,7 +128,7 @@ class _DataManagementSectionState extends ConsumerState<DataManagementSection> {
               const Text(
                 'Confirm Reset',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
@@ -140,7 +140,7 @@ class _DataManagementSectionState extends ConsumerState<DataManagementSection> {
               Text(
                 'Are you sure you want to reset all progress to zero? This action cannot be undone.',
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.black.withOpacity(0.7),
                   fontSize: 16,
                 ),
                 textAlign: TextAlign.center,
@@ -154,7 +154,7 @@ class _DataManagementSectionState extends ConsumerState<DataManagementSection> {
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(context),
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                        side: BorderSide(color: Colors.black.withOpacity(0.2)),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -163,7 +163,7 @@ class _DataManagementSectionState extends ConsumerState<DataManagementSection> {
                       child: Text(
                         'Cancel',
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.black.withOpacity(0.8),
                           fontSize: 16,
                         ),
                       ),
@@ -181,6 +181,7 @@ class _DataManagementSectionState extends ConsumerState<DataManagementSection> {
                           SnackBar(
                             content: const Text(
                               'All progress has been reset to 0',
+                              style: TextStyle(color: Colors.black),
                             ),
                             backgroundColor: Colors.white54.withOpacity(0.9),
                             behavior: SnackBarBehavior.floating,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:confetti/confetti.dart';
 import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
-import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/primary_gradient_button.dart';
+import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/navigation/primary_gradient_button.dart';
 
 class StreakCongratsDialog extends ConsumerStatefulWidget {
   final int goalId;
@@ -68,8 +68,8 @@ class _StreakCongratsDialogState extends ConsumerState<StreakCongratsDialog>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  const Color(0xFF122246).withOpacity(0.95),
-                  const Color(0xFF091428).withOpacity(0.95),
+                  const  Color(0xFFEAE5DA),
+                  const  Color(0xFFEAE5DA),
                 ],
               ),
               borderRadius: BorderRadius.circular(28),
@@ -100,7 +100,7 @@ class _StreakCongratsDialogState extends ConsumerState<StreakCongratsDialog>
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w800,
-                    color: Colors.white,
+                    color: Colors.black,
                     letterSpacing: 1,
                   ),
                 ),
@@ -110,7 +110,7 @@ class _StreakCongratsDialogState extends ConsumerState<StreakCongratsDialog>
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
-                    color: Colors.white70,
+                    color: Colors.black,
                     height: 1.45,
                   ),
                 ),
@@ -170,12 +170,12 @@ class _StreakCongratsDialogState extends ConsumerState<StreakCongratsDialog>
                   children: [
                     const Text(
                       'Result: ',
-                      style: TextStyle(color: Colors.white70, fontSize: 15),
+                      style: TextStyle(color: Colors.black, fontSize: 15),
                     ),
                     const Text(
                       '7/7 days',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
@@ -183,7 +183,7 @@ class _StreakCongratsDialogState extends ConsumerState<StreakCongratsDialog>
                     const SizedBox(width: 28),
                     const Text(
                       'Streak: ',
-                      style: TextStyle(color: Colors.white70, fontSize: 15),
+                      style: TextStyle(color: Colors.black, fontSize: 15),
                     ),
                     const Text(
                       '+1 week',
@@ -244,12 +244,12 @@ class _StreakCongratsDialogState extends ConsumerState<StreakCongratsDialog>
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.share, color: Colors.white, size: 18),
+                      Icon(Icons.share, color: Colors.black, size: 18),
                       SizedBox(width: 8),
                       Text(
                         'Share Achievement',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           decoration: TextDecoration.underline,
                           fontSize: 14,
                         ),

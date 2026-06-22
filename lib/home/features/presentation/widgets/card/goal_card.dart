@@ -74,7 +74,7 @@ class _GoalCardState extends ConsumerState<GoalCard> {
           borderRadius: BorderRadius.circular(24),
         ),
         alignment: Alignment.centerRight,
-        child: const Icon(Icons.delete_outline, color: Colors.white, size: 32),
+        child: const Icon(Icons.delete_outline, color: Colors.black, size: 32),
       ),
 
       confirmDismiss: (direction) async {
@@ -94,8 +94,8 @@ class _GoalCardState extends ConsumerState<GoalCard> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      const Color(0xFF1E3A7A).withOpacity(0.95),
-                      const Color(0xFF122246).withOpacity(0.90),
+                      const Color(0xFFF1EFE9).withOpacity(0.95),
+                      const Color(0xFF9E978E).withOpacity(0.90),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(24),
@@ -112,7 +112,7 @@ class _GoalCardState extends ConsumerState<GoalCard> {
                     const Text(
                       'Delete Goal?',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
@@ -124,7 +124,7 @@ class _GoalCardState extends ConsumerState<GoalCard> {
                     Text(
                       'Are you sure you want to delete this goal? This action cannot be undone.',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.black,
                         fontSize: 16,
                       ),
                       textAlign: TextAlign.center,
@@ -139,7 +139,7 @@ class _GoalCardState extends ConsumerState<GoalCard> {
                           child: OutlinedButton(
                             onPressed: () => Navigator.of(context).pop(false),
                             style: OutlinedButton.styleFrom(
-                              side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                              side: BorderSide(color: Colors.black12),
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -148,7 +148,7 @@ class _GoalCardState extends ConsumerState<GoalCard> {
                             child: Text(
                               'Cancel',
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.8),
+                                color: Colors.black,
                                 fontSize: 16,
                               ),
                             ),
@@ -208,12 +208,19 @@ class _GoalCardState extends ConsumerState<GoalCard> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                const Color(0xFF122246).withOpacity(0.45),
-                const Color(0xFF091428).withOpacity(0.45),
+                const  Color(0xFFEAE5DA),
+                const  Color(0xFFEAE5DA),
               ],
             ),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.white.withOpacity(0.18)),
+            //border: Border.all(color: Colors.black, width: 0.3),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 15,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,7 +235,7 @@ class _GoalCardState extends ConsumerState<GoalCard> {
                     child: Text(
                       widget.goal.title,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                         height: 2,
@@ -242,7 +249,7 @@ class _GoalCardState extends ConsumerState<GoalCard> {
                       Text(
                         '$totalStreak days streak!',
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.black,
                           fontSize: 15,
                         ),
                       ),
@@ -273,7 +280,7 @@ class _GoalCardState extends ConsumerState<GoalCard> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.black,
                         fontSize: 15,
                         height: 1.0,
                       ),
