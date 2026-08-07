@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
-import 'package:goalstack/settings/main_layout.dart';
 import 'empty_topic_screen.dart';
 import '../widgets/card/goal_card.dart';
+
+import 'package:goalstack/home/features/presentation/widgets/popup_dialogs/streak_fail_dialog.dart';
 
 class MyTopicPage extends ConsumerStatefulWidget {
   const MyTopicPage({super.key});
@@ -12,14 +13,55 @@ class MyTopicPage extends ConsumerStatefulWidget {
   ConsumerState<MyTopicPage> createState() => _MyTopicPageState();
 }
 
+final failureCheckPerformedProvider = StateProvider<bool>((ref) => false);
+
 class _MyTopicPageState extends ConsumerState<MyTopicPage> {
+  
+  @override
+  void initState() {
+    super.initState();
+    // Перевірка на провалені цілі після того, як кадр буде побудовано
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final wasChecked = ref.read(failureCheckPerformedProvider);
+      if (!wasChecked) {
+        _checkFailedGoals();
+        ref.read(failureCheckPerformedProvider.notifier).state = true;
+      }
+    });
+  }
+
+  void _checkFailedGoals() {
+    final allGoals = ref.read(goalListProvider);
+    final now = DateTime.now();
+
+    for (final goal in allGoals) {
+      if (goal.isDeleted || goal.isCompleted) continue;
+
+      // Логіка: якщо пройшло 7 днів (для тижневої) або N днів (для кастомної)
+      // І стрік не заповнений повністю
+      int targetDays = goal.weekDaysStatus.length;
+      final daysPassed = now.difference(goal.createdAt).inDays;
+
+      if (daysPassed >= targetDays && goal.weekDaysStatus.contains(false)) {
+        // Показуємо попап провалу
+        showDialog(
+          context: context,
+          barrierColor: Colors.black.withValues(alpha: 0.6),
+          builder: (context) => GoalFailPopup(
+            goalId: goal.id,
+            completedDays: goal.weekDaysStatus.where((s) => s).length,
+            targetDays: targetDays,
+          ),
+        );
+        break; // Показуємо тільки один попап за раз
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final goals = ref.watch(goalListProvider);
-
-    Future.microtask(() {
-      ref.read(hasGoalsProvider.notifier).state = goals.isNotEmpty;
-    });
+    final allGoals = ref.watch(goalListProvider);
+    final goals = allGoals.where((g) => !g.isDeleted).toList();
 
     if (goals.isEmpty) {
       return const EmptyTopicScreen();
@@ -41,22 +83,17 @@ class _MyTopicPageState extends ConsumerState<MyTopicPage> {
             final goal = goals[index];
 
             return GoalCard(
-              title: goal.title,
-
-              icon: goal.icon ?? Icons.flag,
-              iconColor: goal.color ?? Colors.blue,
-
-              streak: goal.streak,
-              initialWeekDays: goal.weekDaysStatus,
-
+              goal: goal,
               // Вогники з бази
-              onDelete: () {
-                ref.read(goalListProvider.notifier).deleteGoal(goal.id);
-
+              onUpdate: (updatedGoal) {
+                ref.read(goalListProvider.notifier).updateGoal(updatedGoal);
+              },
+               onDelete: () {
+               ref.read(goalListProvider.notifier).deleteGoal(goal.id);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: const Text('Goal deleted successfully'),
-                    backgroundColor: Colors.redAccent,
+                    backgroundColor: Colors.white54,
                     behavior: SnackBarBehavior.floating,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),

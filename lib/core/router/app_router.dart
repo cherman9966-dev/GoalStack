@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:goalstack/home/features/domain/entities/goal_entity.dart';
 import 'package:goalstack/home/features/presentation/pages/add_goal_page.dart';
-import 'package:goalstack/home/features/presentation/pages/callendar_page.dart';
+import 'package:goalstack/home/features/presentation/pages/calendar_page.dart';
 import 'package:goalstack/home/features/presentation/pages/login_page.dart';
 import 'package:goalstack/home/features/presentation/pages/my_topic_page.dart';
 import 'package:goalstack/home/features/presentation/pages/setting_page.dart';
@@ -22,8 +23,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/add_goal',
-        builder: (context, state) => const AddGoalPage(),
+        builder: (context, state) {
+          final goal = state.extra as GoalEntity?;
+          return AddGoalPage(goalToEdit: goal);
+        },
       ),
+      GoRoute(
+        path: '/settings',
+        pageBuilder: (context, state) => const NoTransitionPage(
+          child: SettingPage(),
+        ),
+      ),
+
       ShellRoute(
         builder: (context, state, child) {
           return MainLayout(child: child);
@@ -31,15 +42,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(
             path: '/my_topic_page',
-            builder: (context, state) => const MyTopicPage(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: MyTopicPage(),
+            ),
           ),
           GoRoute(
             path: '/calendar',
-            builder: (context, state) => const CallendarPage(),
-          ),
-          GoRoute(
-            path: '/settings',
-            builder: (context, state) => const SettingPage(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: CalendarPage(),
+            ),
           ),
         ],
       ),

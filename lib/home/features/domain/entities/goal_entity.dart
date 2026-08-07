@@ -14,26 +14,36 @@ class GoalEntity {
   late DateTime createdAt;
   late String status;
 
+  bool isDeleted = false;
+
   List<DateTime> completedDates = [];
+
 
   List<bool> weekDaysStatus = [false, false, false, false, false, false, false];
 
+  List<DateTime> streakEarnedDates = [];
+
   int? iconCodePoint;
   int? colorValue;
+  int totalFiresInsideGoal = 0;
 
   @ignore
   IconData? get icon => iconCodePoint != null
       ? IconData(iconCodePoint!, fontFamily: 'MaterialIcons')
       : null;
 
-  @ignore
   set icon(IconData? value) => iconCodePoint = value?.codePoint;
 
   @ignore
   Color? get color => colorValue != null ? Color(colorValue!) : null;
 
-  @ignore
   set color(Color? value) => colorValue = value?.value;
+
+  String goalType = 'all_days';
+
+  int customTargetDays = 3;
+
+  List<bool> calendarSelectedDays = [];
 
   GoalEntity();
 }

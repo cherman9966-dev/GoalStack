@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:goalstack/home/features/presentation/providers/goal_list_provider.dart';
 import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/custom_botom_bar.dart';
 import 'package:goalstack/home/features/presentation/widgets/utils/custom_widgets/home_app_bar.dart';
-
-final hasGoalsProvider = StateProvider<bool>((ref) => false);
 
 class MainLayout extends ConsumerWidget {
   final Widget child;
@@ -19,41 +18,52 @@ class MainLayout extends ConsumerWidget {
   }
 
   @override
-
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasGoals = ref.watch(hasGoalsProvider);
+    final hasGoals = ref.watch(hasActiveGoalsProvider);
+
+    // 1. Визначаємо, чи ми зараз на сторінці налаштувань
+    final String location = GoRouterState.of(context).uri.path;
+    final bool isSettingsPage = location.startsWith('/settings');
+
     return Scaffold(
       extendBody: true,
       body: Stack(
         children: [
+          // Твій спільний фон для всього додатка
           Positioned.fill(
             child: Image.asset(
-              'assets/images/main_background2.png',
+              'assets/images/log_background_fon.png',
               fit: BoxFit.cover,
             ),
           ),
+
+          // Основний контент (сторінки)
           Positioned.fill(
             child: SafeArea(
+              // Якщо це налаштування, ми не хочемо SafeArea зверху,
+              // бо там буде свій AppBar. Якщо головна — залишаємо як було.
               bottom: false,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 0.0),
-                child: child,
-              ),
+              top: !isSettingsPage,
+              child: child,
             ),
           ),
 
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: SafeArea(child: const HomeAppBar()),
-          ),
+          // 2. ПОКАЗУЄМО HomeAppBar тільки якщо це НЕ сторінка налаштувань
+          if (!isSettingsPage)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: const SafeArea(child: HomeAppBar()),
+            ),
         ],
       ),
-      bottomNavigationBar: hasGoals ?CustomBottomBar(
+      // 3. ПРИХОВУЄМО BottomBar на сторінці налаштувань
+      bottomNavigationBar: (hasGoals && !isSettingsPage)
+          ? CustomBottomBar(
         currentIndex: _calculateSelectedIndex(context),
       )
-      :null,
+          : null,
     );
   }
 }
